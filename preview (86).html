@@ -1,0 +1,628 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
+<title>Be Safe IAM — Dashboard Funcional</title>
+<style>
+:root{--bg:#070914;--panel:#101827;--panel2:#151f31;--ink:#f7f8ff;--muted:#9aa8bd;--line:#27364d;--pink:#ff1493;--pink2:#ff66c4;--pink3:#a60062;--ok:#37e884;--bad:#ff5d72;--warn:#ffd166;--blue:#66a6ff;--r:20px;--shadow:0 22px 70px rgba(0,0,0,.48)}
+*{box-sizing:border-box}html,body{margin:0;min-height:100%;background:radial-gradient(circle at 80% -10%,rgba(255,20,147,.23),transparent 34%),linear-gradient(135deg,#050711,#0b1020 55%,#070914);color:var(--ink);font-family:Inter,Segoe UI,Arial,sans-serif;overflow-x:hidden}button,input,select,textarea{font:inherit}.app{min-height:100vh;display:grid;grid-template-columns:260px minmax(0,1fr)}.side{position:sticky;top:0;height:100vh;padding:20px 14px;background:rgba(5,8,16,.92);border-right:1px solid var(--line);z-index:20}.brand{display:flex;gap:12px;align-items:center;margin-bottom:22px}.logo{width:44px;height:44px;border-radius:15px;background:linear-gradient(135deg,var(--pink),var(--pink3));display:grid;place-items:center;font-weight:1000;box-shadow:0 0 30px rgba(255,20,147,.36)}.brand h1{margin:0;font-size:24px}.brand small{display:block;color:var(--muted);font-size:12px}.nav small{display:block;margin:18px 10px 8px;color:#77869b;font-size:11px;text-transform:uppercase;letter-spacing:.12em}.nav button{width:100%;border:0;background:transparent;color:#cdd8e8;text-align:left;padding:11px 12px;border-radius:12px;cursor:pointer;font-weight:750}.nav button:hover,.nav button.active{background:linear-gradient(90deg,var(--pink),var(--pink3));color:#fff;box-shadow:0 12px 28px rgba(255,20,147,.25)}.main{padding:20px;min-width:0}.top{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:14px}.top h2{margin:0;font-size:25px}.top p{margin:5px 0 0;color:var(--muted);font-size:13px}.topActions{display:flex;gap:10px;align-items:center;flex-wrap:wrap}.pill{border:1px solid var(--line);background:rgba(255,255,255,.045);border-radius:999px;padding:9px 12px;color:#dbe6f8}.btn{border:0;border-radius:12px;padding:11px 14px;background:linear-gradient(90deg,var(--pink),var(--pink3));color:white;font-weight:900;cursor:pointer;box-shadow:0 12px 28px rgba(255,20,147,.25)}.btn:hover{filter:brightness(1.08)}.btn.ghost{background:#172234;border:1px solid #34455e;box-shadow:none}.btn.small{padding:8px 10px;font-size:12px}.btn.bad{background:linear-gradient(90deg,#ff5d72,#9d2238)}.btn.ok{background:linear-gradient(90deg,#37e884,#0c8b50)}.grid{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(340px,.75fr);gap:14px}.cards{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}.card,.panel{background:linear-gradient(180deg,rgba(19,29,46,.96),rgba(10,15,25,.95));border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow);position:relative;overflow:hidden}.card{padding:16px}.card:after{content:"";position:absolute;right:-36px;top:-36px;width:110px;height:110px;border-radius:50%;background:rgba(255,20,147,.14)}.label{font-size:11px;color:#aab7ca;text-transform:uppercase;letter-spacing:.09em}.num{font-size:30px;font-weight:950;margin:8px 0}.delta{font-size:12px;color:var(--ok)}.panel{padding:16px;margin-top:12px}.panel h3{margin:0 0 10px;font-size:16px}.two{display:grid;grid-template-columns:1fr 1fr;gap:12px}.row{display:flex;align-items:center;justify-content:space-between;gap:12px;border-bottom:1px solid rgba(255,255,255,.07);padding:10px 0;font-size:13px}.row:last-child{border-bottom:0}.badge{display:inline-flex;align-items:center;gap:5px;border-radius:999px;padding:4px 8px;background:rgba(55,232,132,.13);color:var(--ok);font-size:11px;font-weight:850}.badge.bad{background:rgba(255,93,114,.13);color:var(--bad)}.badge.warn{background:rgba(255,209,102,.13);color:var(--warn)}.chart{width:100%;height:170px}.bars .bar{display:grid;grid-template-columns:84px 1fr 42px;gap:9px;align-items:center;margin:8px 0;font-size:12px}.fill{height:8px;border-radius:99px;background:#1c283a;overflow:hidden}.fill i{display:block;height:100%;background:linear-gradient(90deg,var(--pink),var(--pink2));border-radius:99px}.map{height:150px;border:1px solid #2b3e58;border-radius:16px;background:radial-gradient(circle at 22% 52%,var(--pink) 0 4px,transparent 6px),radial-gradient(circle at 53% 43%,var(--pink2) 0 4px,transparent 7px),radial-gradient(circle at 78% 62%,var(--pink) 0 4px,transparent 7px),linear-gradient(135deg,#111c2d,#07101d);position:relative}.map:before{content:"";position:absolute;inset:0;background-image:radial-gradient(rgba(255,255,255,.20) 1px,transparent 1px);background-size:12px 12px;opacity:.26}.right{display:flex;flex-direction:column;gap:14px;min-width:0}.module{display:none}.module.active{display:block}.learner{display:grid;grid-template-columns:1fr 1fr;gap:12px;align-items:start}.learner textarea,.learner input,.field,select{width:100%;border:1px solid #31445e;background:#0d1523;color:white;border-radius:12px;padding:11px;outline:none}.learner textarea{min-height:98px;resize:vertical}.summaryBox{color:#d6e0ef;font-size:13px;line-height:1.45;background:rgba(255,20,147,.08);border:1px solid rgba(255,20,147,.24);border-radius:14px;padding:12px}.sim{margin-top:0}.screen{height:218px;border:8px solid #202c3e;border-radius:16px;background:linear-gradient(rgba(4,7,13,.15),rgba(4,7,13,.65)),linear-gradient(140deg,#0d1728,#15243a);display:grid;place-items:center;box-shadow:inset 0 0 40px rgba(0,0,0,.55)}.login{width:min(260px,92%);border:1px solid #334965;border-radius:15px;background:rgba(6,10,18,.88);padding:15px;backdrop-filter:blur(8px)}.login input,.login select{margin:7px 0}.device-tabs{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}.device-tabs button{flex:1;min-width:70px;border:1px solid #334965;background:#121b2b;color:#dce8f8;border-radius:9px;padding:8px;cursor:pointer;font-size:12px}.device-tabs button.active{border-color:var(--pink);color:#fff;background:rgba(255,20,147,.18)}
+.phone{width:min(322px,100%);height:610px;margin:10px auto 0;border-radius:46px;background:linear-gradient(145deg,#05070b,#222b3b 44%,#05070b);border:1px solid #3a4657;padding:11px;box-shadow:0 28px 90px rgba(0,0,0,.58),inset 0 0 0 2px rgba(255,255,255,.05);position:relative;max-width:100%}.phone:before{content:"";position:absolute;top:8px;left:50%;transform:translateX(-50%);width:104px;height:25px;background:#05070b;border-radius:0 0 18px 18px;z-index:5}.phonein{height:100%;border-radius:36px;background:radial-gradient(circle at 50% -12%,rgba(255,20,147,.28),transparent 38%),linear-gradient(180deg,#111b2d,#070b13 70%,#04060a);padding:16px 13px 13px;display:flex;flex-direction:column;overflow:hidden}.status{display:flex;justify-content:space-between;align-items:center;font-size:11px;font-weight:900;padding:2px 8px 9px;flex:0 0 auto}.icons{display:flex;gap:5px;align-items:center}.sig{width:18px;height:10px;background:#fff;clip-path:polygon(0 100%,20% 70%,40% 45%,60% 25%,80% 10%,100% 0,100% 100%)}.wifi{width:14px;height:10px;border:2px solid white;border-bottom:0;border-radius:14px 14px 0 0}.bat{width:23px;height:10px;border:1.5px solid #fff;border-radius:3px;position:relative}.bat:after{content:"";position:absolute;right:-4px;top:2px;width:2px;height:5px;background:#fff}.bat i{display:block;width:74%;height:100%;background:#fff}.phone-scroll{min-height:0;flex:1;overflow:auto;padding:0 2px 8px;scrollbar-width:thin;scrollbar-color:var(--pink) transparent}.phone-scroll::-webkit-scrollbar{width:4px}.phone-scroll::-webkit-scrollbar-thumb{background:var(--pink);border-radius:6px}.ph-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:9px}.ph-brand{display:flex;gap:8px;align-items:center;min-width:0}.ph-logo{width:34px;height:34px;flex:0 0 34px;border-radius:12px;background:linear-gradient(135deg,var(--pink),var(--pink3));display:grid;place-items:center;font-weight:1000}.ph-title{min-width:0}.ph-title b{font-size:14px;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.ph-title small{display:block;color:var(--muted);font-size:10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.safe{font-size:10px;color:var(--ok);white-space:nowrap}.req{border:1px solid #334a66;border-radius:18px;background:linear-gradient(180deg,rgba(255,255,255,.075),rgba(255,255,255,.035));padding:12px;overflow:hidden}.req b{display:block;font-size:13px;margin-bottom:6px}.req .email{font-size:12px;line-height:1.25;overflow-wrap:anywhere;margin:6px 0 9px;color:#fff}.minirow{display:grid;grid-template-columns:72px minmax(0,1fr);gap:8px;border-top:1px solid rgba(255,255,255,.07);padding-top:7px;margin-top:7px}.minirow small:first-child{color:#9aa8bd}.minirow small:last-child{color:#e7eefb;text-align:right;overflow-wrap:anywhere;min-width:0}.riskchip,.alertok{margin-top:9px;border-radius:14px;padding:9px;border:1px solid rgba(255,20,147,.32);background:rgba(255,20,147,.10);font-size:11px}.riskchip{display:flex;justify-content:space-between;gap:8px}.otp-box{display:grid;grid-template-columns:repeat(6,1fr);gap:4px;margin-top:5px}.otp-box span{height:30px;border:1px solid #30445f;border-radius:9px;background:#101929;display:grid;place-items:center;font-size:14px;font-weight:950}.phone-actions{display:grid;grid-template-columns:1fr;gap:8px;flex:0 0 auto;padding-top:8px}.phone-actions .btn{width:100%;min-height:42px;padding:10px;font-size:13px}.policyEditor{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:8px}.policyItem{border:1px solid #30445f;background:#0d1523;border-radius:14px;padding:11px}.policyItem input{accent-color:var(--pink)}.rulegrid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.table{max-height:360px;overflow:auto}.tourbox{position:fixed;z-index:80;width:min(360px,calc(100vw - 24px));background:#fff;color:#111827;border:3px solid var(--pink);border-radius:18px;padding:14px;box-shadow:0 18px 60px rgba(0,0,0,.4)}.tourbox:before{content:"";position:absolute;top:-18px;left:26px;border-left:14px solid transparent;border-right:14px solid transparent;border-bottom:18px solid var(--pink)}.tourbox b{color:#b00060}.tourbox p{font-size:13px;line-height:1.35}.tourcontrols{display:flex;justify-content:flex-end;gap:8px}.mark{outline:4px solid var(--pink)!important;box-shadow:0 0 0 10px rgba(255,20,147,.18),var(--shadow)!important}.toast{position:fixed;right:20px;bottom:20px;z-index:120;background:#111827;border:1px solid var(--pink);border-radius:15px;padding:12px 14px;display:none;box-shadow:var(--shadow)}.cert-modal{position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:100;display:none;align-items:center;justify-content:center;padding:16px}.cert-wrap{width:min(1100px,100%);background:#0b1020;border:1px solid var(--line);border-radius:20px;padding:14px}.cert-wrap canvas{width:100%;height:auto;background:white;border-radius:12px}.cert-actions{display:flex;justify-content:flex-end;gap:10px;margin-top:10px}.footer{display:flex;gap:16px;flex-wrap:wrap;margin-top:16px;color:var(--muted);font-size:12px}.blink{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--ok);box-shadow:0 0 16px var(--ok);animation:pulse 1s infinite}@keyframes pulse{50%{opacity:.3}}@media(max-width:1180px){.grid{grid-template-columns:1fr}.right{display:grid;grid-template-columns:1fr 1fr}.phone{height:590px}.cards{grid-template-columns:repeat(2,1fr)}}@media(max-width:820px){.app{grid-template-columns:1fr}.side{position:relative;height:auto}.nav{display:grid;grid-template-columns:1fr 1fr}.main{padding:14px}.top{align-items:flex-start;flex-direction:column}.cards,.two,.learner,.right,.policyEditor,.rulegrid{grid-template-columns:1fr}.screen{height:210px}.phone{height:570px}.row{align-items:flex-start;flex-direction:column}.cert-actions{flex-direction:column}.cert-actions .btn{width:100%}}@media(max-width:430px){.phone{width:100%;height:545px;border-radius:38px;padding:9px}.phonein{border-radius:30px;padding:14px 10px 10px}.minirow{grid-template-columns:64px minmax(0,1fr)}.ph-title b{font-size:13px}.phone-actions .btn{font-size:12px}.nav{grid-template-columns:1fr}.cards{grid-template-columns:1fr}}
+
+.hidden{display:none!important}
+.landingPage{min-height:100vh;display:grid;grid-template-columns:minmax(0,1.05fr) minmax(320px,.95fr);gap:24px;align-items:center;padding:28px;background:radial-gradient(circle at 80% -10%,rgba(255,20,147,.26),transparent 34%),linear-gradient(135deg,#050711,#0b1020 55%,#070914)}
+.landingHero{background:linear-gradient(180deg,rgba(19,29,46,.96),rgba(10,15,25,.95));border:1px solid var(--line);border-radius:30px;padding:30px;box-shadow:var(--shadow)}
+.landingHero h1{font-size:clamp(42px,7vw,78px);line-height:.92;margin:16px 0 12px;letter-spacing:-3px}
+.landingHero p{font-size:17px;line-height:1.55;color:#d6e0ef;max-width:780px}
+.landingForm{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;margin-top:18px}
+.landingCards{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:18px}
+.landingMini{border:1px solid #30445f;background:#0d1523;border-radius:18px;padding:14px}
+.landingMini b{display:block;margin-bottom:6px}
+.landingPreview{display:grid;grid-template-columns:minmax(0,1fr);gap:14px}
+.fakeMonitor{border:1px solid #30445f;background:linear-gradient(135deg,#111c2d,#07101d);border-radius:28px;padding:16px;box-shadow:var(--shadow)}
+.fakeMonitorTop{height:24px;border-radius:999px;background:#18243a;display:flex;gap:6px;align-items:center;padding:0 10px;margin-bottom:14px}
+.fakeMonitorTop i{width:8px;height:8px;border-radius:50%;background:var(--pink)}
+.fakeKpis{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.fakeKpi{background:rgba(255,255,255,.045);border:1px solid var(--line);border-radius:16px;padding:12px}
+.fakeKpi strong{display:block;font-size:28px;color:#fff;margin-top:4px}
+@media(max-width:980px){.landingPage{grid-template-columns:1fr}.landingCards,.landingForm{grid-template-columns:1fr}.landingPreview .phone{margin:auto}}
+
+
+/* FIX BE SAFE IAM — anti-sobreposição desktop/celular */
+.right{
+  display:flex!important;
+  flex-direction:column!important;
+  gap:18px!important;
+  min-width:340px!important;
+  overflow:visible!important;
+}
+#simPanel{
+  overflow:visible!important;
+}
+#desktopSim.screen{
+  height:auto!important;
+  min-height:196px!important;
+  padding:14px!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+}
+#desktopSim .login{
+  width:min(270px,100%)!important;
+  max-width:100%!important;
+}
+#desktopSim .login input,
+#desktopSim .login select{
+  min-height:38px!important;
+  padding:9px 10px!important;
+}
+#desktopSim .login .btn{
+  min-height:39px!important;
+  padding:9px 10px!important;
+}
+.device-tabs{
+  display:grid!important;
+  grid-template-columns:repeat(3,minmax(0,1fr))!important;
+  gap:6px!important;
+}
+.device-tabs button{
+  min-width:0!important;
+  white-space:nowrap!important;
+  overflow:hidden!important;
+  text-overflow:ellipsis!important;
+}
+#phoneSim.phone{
+  width:min(318px,100%)!important;
+  height:560px!important;
+  margin:12px auto 0!important;
+  flex:0 0 auto!important;
+}
+.phonein{
+  min-height:0!important;
+}
+.phone-scroll{
+  min-height:0!important;
+  flex:1 1 auto!important;
+  overflow-y:auto!important;
+  overflow-x:hidden!important;
+  padding-bottom:10px!important;
+}
+.phone-actions{
+  flex:0 0 auto!important;
+  display:grid!important;
+  grid-template-columns:1fr 1fr!important;
+  gap:8px!important;
+  padding-top:8px!important;
+}
+.phone-actions .btn{
+  min-height:40px!important;
+  font-size:12px!important;
+  padding:9px 6px!important;
+}
+.req{
+  padding:10px!important;
+}
+.req b{
+  font-size:12px!important;
+}
+.req .email{
+  font-size:11px!important;
+}
+.minirow{
+  grid-template-columns:68px minmax(0,1fr)!important;
+  gap:6px!important;
+  padding-top:6px!important;
+  margin-top:6px!important;
+}
+.minirow small{
+  font-size:10.5px!important;
+  line-height:1.25!important;
+}
+.riskchip,.alertok{
+  font-size:10.5px!important;
+  padding:8px!important;
+}
+.otp-box span{
+  height:26px!important;
+  font-size:12px!important;
+}
+@media(max-width:1180px){
+  .right{
+    display:grid!important;
+    grid-template-columns:1fr!important;
+    min-width:0!important;
+  }
+  #phoneSim.phone{
+    height:540px!important;
+  }
+}
+@media(max-width:820px){
+  #simPanel{
+    overflow:hidden!important;
+  }
+  #desktopSim.screen{
+    min-height:auto!important;
+  }
+  #phoneSim.phone{
+    width:min(300px,100%)!important;
+    height:525px!important;
+  }
+  .phone-actions{
+    grid-template-columns:1fr 1fr!important;
+  }
+}
+@media(max-width:430px){
+  #phoneSim.phone{
+    width:100%!important;
+    height:505px!important;
+  }
+  .device-tabs{
+    grid-template-columns:1fr!important;
+  }
+  .phone-actions{
+    grid-template-columns:1fr!important;
+  }
+}
+
+
+.tenantCase{border:1px solid #30445f;background:#0d1523;border-radius:16px;padding:12px;margin-top:10px}
+.tenantCase .tenantHead{display:flex;justify-content:space-between;gap:10px;align-items:center;margin-bottom:8px}
+.tenantCase b{font-size:14px}
+.tenantMetrics{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:8px}
+.tenantMetrics span{background:rgba(255,255,255,.045);border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:8px;font-size:11px;color:#dce8f8}
+@media(max-width:820px){.tenantMetrics{grid-template-columns:1fr}}
+
+
+/* Relatórios executivos em PDF */
+.reportDesigner{display:grid;grid-template-columns:minmax(0,1fr) 320px;gap:14px;margin-top:12px}
+.reportPreview{background:#f8fafc;color:#111827;border-radius:18px;border:1px solid #30445f;overflow:hidden;box-shadow:0 18px 48px rgba(0,0,0,.25)}
+.reportCover{background:linear-gradient(135deg,#111827,#3b0a2a 55%,#ff1493);color:white;padding:24px}
+.reportCover h3{font-size:26px;margin:0 0 6px}
+.reportCover p{margin:0;color:#ffe7f6}
+.reportBody{padding:18px}
+.reportKpis{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:12px 0}
+.reportKpi{background:white;border:1px solid #e5e7eb;border-radius:14px;padding:12px;box-shadow:0 10px 24px rgba(15,23,42,.06)}
+.reportKpi small{display:block;color:#6b7280;font-weight:800;text-transform:uppercase;font-size:10px;letter-spacing:.08em}
+.reportKpi b{display:block;font-size:23px;color:#111827;margin-top:5px}
+.reportTable{width:100%;border-collapse:collapse;background:white;border-radius:14px;overflow:hidden;margin-top:12px}
+.reportTable th{background:#111827;color:white;text-align:left;font-size:12px;padding:10px}
+.reportTable td{border-bottom:1px solid #e5e7eb;padding:10px;font-size:12px;color:#1f2937}
+.reportTable tr:last-child td{border-bottom:0}
+.reportInsight{border-left:5px solid #ff1493;background:#fff1f8;padding:12px;border-radius:12px;margin-top:12px;color:#374151}
+.reportSide{display:grid;gap:10px}
+.reportActions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.reportTag{display:inline-block;background:#ffe4f4;color:#9d005d;border:1px solid #ffb9df;border-radius:999px;padding:5px 9px;font-size:11px;font-weight:900}
+@media(max-width:980px){.reportDesigner{grid-template-columns:1fr}.reportKpis{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:520px){.reportKpis{grid-template-columns:1fr}}
+
+</style>
+</head>
+<body>
+
+<section id="landingPage" class="landingPage">
+  <div class="landingHero">
+    <span class="pill"><i class="blink"></i> Plataforma educacional corporativa</span>
+    <h1>Be Safe <span style="color:var(--pink)">IAM</span></h1>
+    <p>Simule uma operação de Identity & Access Management com SSO, MFA, FIDO2, RBAC, ABAC, motor de regras, políticas adaptativas, auditoria e aprovação mobile. O nome informado aparece na dashboard, no celular e no certificado final.</p>
+    <div class="landingForm">
+      <input id="studentNameLanding" placeholder="Digite o nome do aluno">
+      <button class="btn" onclick="enterPlatform()">Entrar na Plataforma</button>
+    </div>
+    <div class="landingCards">
+      <div class="landingMini"><b>SSO</b><small style="color:var(--muted)">Acesso único para apps corporativos.</small></div>
+      <div class="landingMini"><b>MFA</b><small style="color:var(--muted)">Push, TOTP, QR Code, Magic Link e FIDO2.</small></div>
+      <div class="landingMini"><b>Políticas</b><small style="color:var(--muted)">Regras por função, atributo, IP, país e horário.</small></div>
+    </div>
+  </div>
+  <div class="landingPreview">
+    <div class="fakeMonitor">
+      <div class="fakeMonitorTop"><i></i><i></i><i></i></div>
+      <div class="fakeKpis">
+        <div class="fakeKpi"><span class="label">Identidades</span><strong>8.642</strong></div>
+        <div class="fakeKpi"><span class="label">MFA hoje</span><strong>6.421</strong></div>
+        <div class="fakeKpi"><span class="label">Apps SSO</span><strong>22</strong></div>
+        <div class="fakeKpi"><span class="label">Risco</span><strong>31/100</strong></div>
+      </div>
+    </div>
+    <div class="phone">
+      <div class="phonein">
+        <div class="status"><span>09:42</span><span class="icons"><i class="sig"></i><i class="wifi"></i><i class="bat"><i></i></i></span></div>
+        <div class="phone-scroll">
+          <div class="ph-head">
+            <div class="ph-brand"><div class="ph-logo">B</div><div class="ph-title"><b>Be Safe IAM</b><small>Autenticador corporativo</small></div></div>
+            <span class="safe"><i class="blink"></i> seguro</span>
+          </div>
+          <div class="req">
+            <b>Nova solicitação</b>
+            <div class="email" id="landingPhoneUser">aluno@empresa.com</div>
+            <div class="minirow"><small>App</small><small>SAP Finance</small></div>
+            <div class="minirow"><small>Local</small><small>São Paulo, Brasil</small></div>
+            <div class="minirow"><small>Dispositivo</small><small>Windows 11 / Chrome</small></div>
+          </div>
+          <div class="riskchip"><span>Risco</span><b>Baixo · 28/100</b></div>
+        </div>
+        <div class="phone-actions"><button class="btn ok">✓ Aprovar</button><button class="btn bad">× Rejeitar</button></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="app hidden" id="appRoot">
+  <aside class="side"><div class="brand"><div class="logo">B</div><div><h1>Be Safe <span style="color:var(--pink)">IAM</span></h1><small>Identity & Access Management</small></div></div><nav class="nav"><small>Console</small><button class="active" onclick="showModule('dash',this)">⌂ Dashboard</button><button onclick="showModule('ident',this)">👤 Identidades</button><button onclick="showModule('access',this)">▦ RBAC / ABAC</button><button onclick="showModule('apps',this)">▣ Apps SSO</button><button onclick="showModule('mfa',this)">◎ MFA</button><button onclick="showModule('magiclink',this)">✉ Magic Link</button><button onclick="showModule('rules',this)">⚙ Motor de regras</button><button onclick="showModule('policies',this)">☰ Políticas</button><button onclick="showModule('logs',this)">➤ Auditoria</button>
+<button onclick="showModule('directory',this)">⛓ Diretórios / AD</button>
+<button onclick="showModule('enrollment',this)">▣ Enrollment QR</button>
+<button onclick="showModule('portal',this)">◉ Portal do usuário</button>
+<button onclick="showModule('api',this)">{} API Explorer</button>
+<button onclick="showModule('tenant',this)">▥ Multitenant / Infra</button>
+<button onclick="showModule('reports',this)">▤ Relatórios</button></nav></aside>
+  <main class="main"><div class="top"><div><h2 id="pageTitle">Dashboard</h2><p>Simulador corporativo funcional com SSO, MFA, RBAC, ABAC, políticas, logs e aprovação mobile.</p></div><div class="topActions"><span class="pill"><i class="blink"></i> Online</span><button class="btn ghost" onclick="resetTour()">Resetar tour</button><button class="btn" onclick="startTour()">Iniciar tour guiado</button><button id="certBtn" class="btn ghost" onclick="openCertificate()">Certificado PNG bloqueado</button></div></div>
+  <section class="grid"><div>
+    <div id="learnerCard" style="display:none"><input id="studentName"><textarea id="iamSummary">Treinamento prático do Be Safe IAM com SSO, MFA, FIDO2, RBAC, ABAC, motor de regras, políticas adaptativas, auditoria e aprovação mobile.</textarea><span id="summaryPreview"></span><span id="studentPreview"></span></div>
+    <div id="dash" class="module active"><div class="cards"><div class="card" id="kpiUsers"><div class="label">Identidades</div><div class="num" data-base="8642">8.642</div><div class="delta">+ onboarding automático</div></div><div class="card"><div class="label">Sessões SSO</div><div class="num" data-base="1287">1.287</div><div class="delta">ativas agora</div></div><div class="card"><div class="label">MFA hoje</div><div class="num" data-base="6421">6.421</div><div class="delta">push, TOTP e FIDO2</div></div><div class="card"><div class="label">Bloqueios</div><div class="num" data-base="37">37</div><div class="delta" style="color:var(--bad)">por regra adaptativa</div></div></div>
+      <div class="two"><div class="panel" id="chartPanel"><h3>Autenticações em tempo real</h3><canvas id="lineChart" class="chart"></canvas></div><div class="panel" id="mfaChart"><h3>MFA utilizado</h3><canvas id="donutChart" class="chart"></canvas></div></div>
+      <div class="two"><div class="panel" id="sessions"><h3>Sessões ativas</h3><div id="sessionList"></div></div><div class="panel" id="mapPanel"><h3>Geolocalização de acessos</h3><div class="map"></div><div class="bars"><div class="bar"><span>Brasil</span><div class="fill"><i style="width:76%"></i></div><b>76%</b></div><div class="bar"><span>EUA</span><div class="fill"><i style="width:14%"></i></div><b>14%</b></div><div class="bar"><span>Outros</span><div class="fill"><i style="width:10%"></i></div><b>10%</b></div></div></div></div>
+      <div class="two"><div class="panel" id="auditSmall"><h3>Auditoria ao vivo</h3><div id="auditRows"></div></div><div class="panel" id="riskPanel"><h3>Risco adaptativo</h3><div style="display:grid;place-items:center;height:120px"><div style="font-size:48px;font-weight:1000;color:var(--pink)"><span id="riskValue">31</span>/100</div><small style="color:var(--muted)">varia por IP, país, horário, função e dispositivo</small></div></div></div>
+    </div>
+    <div id="ident" class="module panel"><h3>Identidades</h3><div class="policyEditor"><input id="newUser" class="field" placeholder="email do usuário"><select id="userType"><option>Nativo</option><option>Active Directory</option><option>Convidado</option></select></div><button class="btn" onclick="addUser()">Criar identidade</button><div id="usersTable" class="table"></div></div>
+    <div id="access" class="module panel"><h3>RBAC / ABAC</h3><p style="color:var(--muted)">Clique nos perfis para alterar permissões e regras de acesso.</p><div class="topActions"><button class="btn ghost" onclick="setRole('Financeiro')">Financeiro</button><button class="btn ghost" onclick="setRole('TI')">TI</button><button class="btn ghost" onclick="setRole('Admin')">Admin</button><button class="btn ghost" onclick="setRole('RH')">RH</button></div><div id="roleResult" style="margin-top:12px"></div></div>
+    <div id="apps" class="module panel"><h3>Aplicações SSO</h3><div class="policyEditor"><input id="appName" class="field" placeholder="Nome da aplicação"><select id="appProtocol"><option>SAML2</option><option>OIDC</option><option>RADIUS</option><option>REST API</option></select></div><button class="btn" onclick="addApp()">Integrar aplicação</button><div id="appsList" class="table"></div></div>
+    <div id="mfa" class="module panel"><h3>Métodos MFA</h3><p style="color:var(--muted)">Ative/desative métodos. Isso altera logs, celular e políticas.</p><div id="mfaToggles"></div></div>
+
+    <div id="magiclink" class="module panel">
+      <h3>Magic Link</h3>
+      <p style="color:var(--muted)">Fluxo de autenticação sem senha por link temporário enviado ao e-mail do usuário. O link expira, registra trilha de auditoria e pode exigir MFA adicional conforme risco.</p>
+      <div class="two">
+        <div>
+          <div class="policyEditor">
+            <input id="magicUser" class="field" placeholder="usuario@empresa.com">
+            <select id="magicApp"><option>SAP Finance</option><option>Portal Corporativo</option><option>Be Safe Finance</option><option>Be Safe Inc Admin</option></select>
+            <select id="magicRisk"><option>Baixo</option><option>Médio</option><option>Alto</option></select>
+            <button class="btn" onclick="sendMagicLink()">Enviar Magic Link</button>
+          </div>
+          <div id="magicResult" style="margin-top:12px"></div>
+        </div>
+        <div class="policyItem">
+          <b>Prévia do e-mail</b>
+          <div id="magicEmail" style="margin-top:10px;border:1px solid #30445f;background:#07101d;border-radius:16px;padding:14px">
+            <div style="font-size:12px;color:var(--muted)">De: iam@besafe.inc</div>
+            <div style="font-size:12px;color:var(--muted)">Para: usuario@empresa.com</div>
+            <h3 style="margin:10px 0;color:#fff">Seu link seguro de acesso</h3>
+            <p style="color:#dce8f8;font-size:13px">Clique no botão para acessar a aplicação solicitada. O link expira em 5 minutos.</p>
+            <button class="btn small" onclick="consumeMagicLink()">Acessar com Magic Link</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="rules" class="module panel"><h3>Motor de regras</h3><div class="rulegrid"><select id="country"><option>Brasil</option><option>Estados Unidos</option><option>Desconhecido</option></select><select id="hour"><option>Horário comercial</option><option>Madrugada</option></select><select id="device"><option>Dispositivo confiável</option><option>Dispositivo novo</option></select><select id="ip"><option>IP corporativo</option><option>IP anônimo</option></select></div><button class="btn" onclick="evalRule()">Avaliar acesso</button><div id="ruleResult" style="margin-top:12px"></div></div>
+    <div id="policies" class="module panel"><h3>Políticas</h3><div class="policyEditor"><input id="policyName" class="field" placeholder="Nome da política"><select id="policyAction"><option>Exigir MFA</option><option>Negar acesso</option><option>Reautenticar</option><option>Permitir com auditoria</option></select><select id="policyTarget"><option>SAP Finance</option><option>Azure Portal</option><option>Google Workspace</option><option>Todos os apps</option></select><select id="policyCond"><option>Dispositivo novo</option><option>IP anônimo</option><option>Fora do Brasil</option><option>Fora do horário</option></select></div><button class="btn" onclick="addPolicy()">Salvar política</button><div id="policyList"></div></div>
+    <div id="logs" class="module panel"><h3>Logs & Auditoria completos</h3><button class="btn ghost" onclick="exportLogs()">Exportar JSON</button><div id="fullLogs" class="table"></div></div>
+    
+    <div id="directory" class="module panel">
+      <h3>Diretórios / Active Directory</h3>
+      <p style="color:var(--muted)">Simule sincronização de identidades nativas e diretórios corporativos, com grupos vinculados a funções.</p>
+      <div class="policyEditor">
+        <input id="adName" class="field" value="corp.local">
+        <select id="adMode"><option>Agente conectado</option><option>Agente em alerta</option><option>Somente identidades nativas</option></select>
+        <select id="adSync"><option>Sincronização incremental</option><option>Sincronização completa</option><option>Pausar sync</option></select>
+        <button class="btn" onclick="syncDirectory()">Sincronizar agora</button>
+      </div>
+      <div id="directoryStatus" class="two" style="margin-top:12px"></div>
+    </div>
+
+    <div id="enrollment" class="module panel">
+      <h3>Enrollment de MFA por QR / Cupom</h3>
+      <p style="color:var(--muted)">Fluxo visual para registrar segundo fator via QR Code, cupom, e-mail, SMS ou app autenticador.</p>
+      <div class="two">
+        <div>
+          <div class="policyEditor">
+            <input id="enrollUser" class="field" placeholder="usuario@empresa.com">
+            <select id="enrollMethod"><option>QR Code</option><option>Cupom por e-mail</option><option>SMS OTP</option><option>Magic Link</option><option>FIDO2 / Passkey</option></select>
+          </div>
+          <button class="btn" onclick="generateEnrollment()">Gerar enrollment</button>
+          <div id="enrollmentResult" style="margin-top:12px"></div>
+        </div>
+        <div style="display:grid;place-items:center">
+          <div id="fakeQr" style="width:190px;height:190px;border:10px solid #fff;background:#fff;border-radius:18px;display:grid;grid-template-columns:repeat(7,1fr);gap:5px;padding:10px"></div>
+        </div>
+      </div>
+    </div>
+
+    <div id="portal" class="module panel">
+      <h3>Portal do usuário</h3>
+      <p style="color:var(--muted)">Área de autosserviço: aplicações disponíveis, sessões, dispositivos, atividade, troca e recuperação de senha.</p>
+      <div class="gridTools">
+        <div class="policyItem"><b>Minhas aplicações</b><div id="userPortalApps"></div></div>
+        <div class="policyItem"><b>Meus dispositivos</b><div id="userDevices"></div><button class="btn small" onclick="addDevice()">Adicionar dispositivo</button></div>
+        <div class="policyItem"><b>Sessões</b><div id="userSessions"></div><button class="btn small bad" onclick="revokeSessions()">Encerrar todas</button></div>
+        <div class="policyItem"><b>Senha</b><input class="field" id="newPass" placeholder="Nova senha"><button class="btn small" onclick="changePassword()">Alterar senha</button></div>
+      </div>
+    </div>
+
+    <div id="api" class="module panel">
+      <h3>API Explorer</h3>
+      <p style="color:var(--muted)">Simule métodos administrativos: validar credenciais, habilitar usuários, bloquear/desbloquear, validar token e informar status.</p>
+      <div class="policyEditor">
+        <select id="apiMethod"><option>POST /validate-credentials</option><option>POST /users/block</option><option>POST /users/unblock</option><option>POST /factors/cancel</option><option>POST /token/validate</option><option>GET /users/status</option></select>
+        <input id="apiUser" class="field" placeholder="usuario@empresa.com">
+        <button class="btn" onclick="runApi()">Executar</button>
+      </div>
+      <pre id="apiOutput" style="white-space:pre-wrap;background:#07101d;border:1px solid #30445f;border-radius:16px;padding:14px;min-height:180px;color:#dce8f8"></pre>
+    </div>
+
+    <div id="tenant" class="module panel">
+      <h3>Multitenant / Infraestrutura</h3>
+      <p style="color:var(--muted)">Visão simulada de tenants, agente, containers, monitoramento, backup, alta disponibilidade e SLA.</p>
+      <div class="cards">
+        <div class="card tenant-card"><div class="label">Tenants ativos</div><div class="num fixed-num" data-fixed="3">3</div><div class="delta">Be Safe Inc · Finance · Health</div></div>
+        <div class="card tenant-card"><div class="label">Agentes</div><div class="num fixed-num" data-fixed="6/6">6/6</div><div class="delta">2 por tenant · HA ativo</div></div>
+        <div class="card tenant-card"><div class="label">Backup</div><div class="num fixed-num" data-fixed="15min">15min</div><div class="delta">incremental por tenant</div></div>
+        <div class="card tenant-card"><div class="label">RTO</div><div class="num fixed-num" data-fixed="30min">30min</div><div class="delta">failover simulado</div></div>
+      </div>
+      <div class="two" style="margin-top:12px">
+        <div class="policyItem">
+          <b>Cases multitenant Be Safe</b>
+          <div id="tenantCases"></div>
+        </div>
+        <div class="policyItem">
+          <b>Operação por tenant</b>
+          <div id="tenantOps"></div>
+        </div>
+      </div>
+      <div class="two" style="margin-top:12px">
+        <div class="policyItem">
+          <b>Componentes por ambiente</b>
+          <div class="row"><span>Auth Server</span><span class="badge">3 réplicas</span></div>
+          <div class="row"><span>SSO IdP</span><span class="badge">OIDC/SAML</span></div>
+          <div class="row"><span>Comm Server</span><span class="badge">SMS · E-mail · Push</span></div>
+          <div class="row"><span>Agent + RADIUS</span><span class="badge">HA ativo</span></div>
+          <div class="row"><span>Directory Bridge</span><span class="badge">AD sync</span></div>
+        </div>
+        <div class="policyItem">
+          <b>Observabilidade e continuidade</b>
+          <div class="row"><span>Logs de auditoria</span><span class="badge">Ativo</span></div>
+          <div class="row"><span>Métricas de autenticação</span><span class="badge">Ativo</span></div>
+          <div class="row"><span>Backup incremental</span><span class="badge">15 min</span></div>
+          <div class="row"><span>Alarme Be Safe Finance</span><span class="badge warn">Pico de MFA</span></div>
+          <div class="row"><span>Failover</span><span class="badge">Pronto</span></div>
+        </div>
+      </div>
+      <div class="panel" style="margin-top:12px">
+        <h3>Eventos de tenant</h3>
+        <div id="tenantTimeline"></div>
+      </div>
+    </div>
+
+    <div id="reports" class="module panel">
+      <h3>Relatórios avançados</h3>
+      <p style="color:var(--muted)">Relatórios de acesso, falhas, criação/modificação/exclusão de usuários, redefinições de senha, identidades por status/tipo e MFA usado.</p>
+      <div class="gridTools">
+        <div class="policyItem reportCard"><b>Acessos com sucesso</b><div class="num fixed-num" data-fixed="12.408">12.408</div><small style="color:var(--muted)">SSO, portal e apps integrados</small><button class="btn small" onclick="generateReport('success')">Gerar relatório</button></div>
+        <div class="policyItem reportCard"><b>Acessos com falha</b><div class="num fixed-num" data-fixed="184">184</div><small style="color:var(--muted)">Senha incorreta, MFA negado e ABAC</small><button class="btn small" onclick="generateReport('fail')">Gerar relatório</button></div>
+        <div class="policyItem reportCard"><b>Redefinições de senha</b><div class="num fixed-num" data-fixed="72">72</div><small style="color:var(--muted)">Self-service e reset administrativo</small><button class="btn small" onclick="generateReport('password')">Gerar relatório</button></div>
+        <div class="policyItem reportCard"><b>Identidades por tipo</b><div class="bars"><div class="bar"><span>AD</span><div class="fill"><i style="width:82%"></i></div><b>82%</b></div><div class="bar"><span>Nativas</span><div class="fill"><i style="width:18%"></i></div><b>18%</b></div></div><button class="btn small" onclick="generateReport('identity')">Gerar relatório</button></div>
+        <div class="policyItem reportCard"><b>MFA usado</b><div class="bars"><div class="bar"><span>Push</span><div class="fill"><i style="width:45%"></i></div><b>45%</b></div><div class="bar"><span>TOTP</span><div class="fill"><i style="width:28%"></i></div><b>28%</b></div><div class="bar"><span>FIDO2</span><div class="fill"><i style="width:14%"></i></div><b>14%</b></div><div class="bar"><span>Magic Link</span><div class="fill"><i style="width:9%"></i></div><b>9%</b></div></div><button class="btn small" onclick="generateReport('mfa')">Gerar relatório</button></div>
+        <div class="policyItem reportCard"><b>Criação / alteração / exclusão</b><div class="num fixed-num" data-fixed="316">316</div><small style="color:var(--muted)">Eventos administrativos auditáveis</small><button class="btn small" onclick="generateReport('admin')">Gerar relatório</button></div>
+      </div>
+      <div class="panel" style="margin-top:12px">
+        <h3>Relatório executivo para PDF</h3>
+        <div class="policyEditor">
+          <select id="reportTenant">
+            <option>Be Safe Inc</option>
+            <option>Be Safe Finance</option>
+            <option>Be Safe Health</option>
+          </select>
+          <select id="reportPeriod">
+            <option>Últimos 7 dias</option>
+            <option selected>Últimos 30 dias</option>
+            <option>Últimos 90 dias</option>
+          </select>
+          <select id="reportProfile">
+            <option>Executivo</option>
+            <option>Técnico</option>
+            <option>Auditoria</option>
+          </select>
+          <button class="btn" onclick="generateReport('success')">Atualizar preview</button>
+        </div>
+        <div id="reportOutput"></div>
+      </div>
+    </div>
+</div>
+    <aside class="right"><div class="panel sim" id="simPanel"><h3>Simulação de acesso <span class="badge"><i class="blink"></i>Ao vivo</span></h3><p class="label">1. Desktop</p><div class="screen" id="desktopSim"><div class="login"><b>Login corporativo</b><input id="loginEmail" value="ana.costa@empresa.com"><input id="loginPass" type="password" value="123456"><select id="loginApp"><option>SAP Finance</option><option>Azure Portal</option><option>Google Workspace</option><option>Portal Corporativo</option></select><button class="btn" style="width:100%" onclick="desktopLogin()">Entrar</button><div class="device-tabs"><button class="active" onclick="setDevice(this,'Windows 11 / Chrome','São Paulo, Brasil','189.55.12.11')">Notebook</button><button onclick="setDevice(this,'iPhone 15 / Safari','Rio de Janeiro, Brasil','177.67.21.15')">iPhone</button><button onclick="setDevice(this,'Linux / Firefox','Lisboa, Portugal','201.33.45.10')">Remoto</button></div></div></div><p class="label" style="margin-top:14px">2. Celular</p><div class="phone" id="phoneSim"><div class="phonein"><div class="status"><span id="phoneClock">09:42</span><span class="icons"><i class="sig"></i><i class="wifi"></i><i class="bat"><i></i></i></span></div><div class="phone-scroll"><div class="ph-head"><div class="ph-brand"><div class="ph-logo">B</div><div class="ph-title"><b>Be Safe IAM</b><small>Autenticador corporativo</small></div></div><span class="safe"><i class="blink"></i> seguro</span></div><div class="req"><b id="requestTitle">Nova solicitação</b><div class="email" id="phoneUser">ana.costa@empresa.com</div><div class="minirow"><small>Aluno</small><small id="phoneStudent">—</small></div><div class="minirow"><small>App</small><small id="phoneApp">SAP Finance</small></div><div class="minirow"><small>Local</small><small id="phoneLocation">São Paulo, Brasil</small></div><div class="minirow"><small>Dispositivo</small><small id="phoneDevice">Windows 11 / Chrome</small></div><div class="minirow"><small>IP</small><small id="phoneIp">189.55.12.11</small></div></div><div class="riskchip"><span>Risco</span><b id="phoneRisk">Baixo · 28/100</b></div><div style="margin-top:9px"><small style="color:var(--muted)">TOTP</small><div class="otp-box" id="otpBox"></div></div><div class="alertok" id="approvalBox">Aguardando ação.</div></div><div class="phone-actions"><button class="btn ok" onclick="approveAccess()">✓ Aprovar</button><button class="btn bad" onclick="rejectAccess()">× Rejeitar</button></div></div></div></div><div class="panel" id="quickPolicies"><h3>Políticas rápidas</h3><div id="quickPolicyList"></div></div></aside>
+  </section><div class="footer"><span>Servidor IAM: <b style="color:var(--ok)">Online</b></span><span>Ambiente: Produção</span><span>Uptime: <b id="uptime">15d 08:42:11</b></span><span>Aluno: <b id="footerStudent">—</b></span></div></main>
+</div><div class="toast" id="toast"></div><div class="cert-modal" id="certModal"><div class="cert-wrap"><canvas id="certCanvas" width="1600" height="1000"></canvas><div class="cert-actions"><button class="btn ghost" onclick="closeCertificate()">Fechar</button><button class="btn" onclick="downloadCertificate()">Baixar certificado PNG</button></div></div></div>
+<script>
+const $=id=>document.getElementById(id), pink='#ff1493', ok='#37e884', bad='#ff5d72';let logs=[],users=['Ana Costa','Carlos Silva','Mariana Lima','João Ferreira','Fernanda Souza'],apps=['SAP Finance','Azure Portal','Google Workspace','Portal Corporativo'],policies=['MFA obrigatório para aplicações financeiras','Bloquear IP anônimo','Reautenticar dispositivo novo','FIDO2 para administradores'];const mfas=['Push App','SYNC in-app','TOTP','HOTP','Biometria','FIDO2 / Passkeys','Magic Link','E-mail OTP','SMS OTP','QR Code','Hard Token','2FA Wallet'];function toast(t){$('toast').textContent=t;$('toast').style.display='block';setTimeout(()=>$('toast').style.display='none',2600)}function fmt(n){return n.toLocaleString('pt-BR')}function safe(s){return String(s).replace(/[&<>"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]))}
+function syncStudent(){let n=$('studentName').value.trim();localStorage.setItem('bsiam_name',n);$('studentPreview').textContent=n||'—';$('phoneStudent').textContent=n||'—';$('footerStudent').textContent=n||'—';if(n){$('loginEmail').value=n.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/g,'.').replace(/^\.|\.$/g,'')+'@empresa.com';$('phoneUser').textContent=$('loginEmail').value}}function syncSummary(){localStorage.setItem('bsiam_summary',$('iamSummary').value);$('summaryPreview').textContent=$('iamSummary').value}
+$('studentName').value=localStorage.getItem('bsiam_name')||'';$('iamSummary').value=localStorage.getItem('bsiam_summary')||$('iamSummary').value;syncStudent();syncSummary();
+function addLog(user,action,app,result,detail){logs.unshift({hora:new Date().toLocaleTimeString('pt-BR'),user,action,app,ip:currentIp||'189.55.12.11',result,detail});renderLogs()}function renderLogs(){let small=logs.slice(0,7).map(l=>`<div class=row><span>${l.hora}</span><b>${safe(l.user)}</b><span style="color:${l.result==='Bloqueado'?bad:ok}">${l.result}</span><small>${safe(l.detail)}</small></div>`).join('');$('auditRows').innerHTML=small;$('fullLogs').innerHTML=logs.map(l=>`<div class=row><span>${l.hora}</span><b>${safe(l.user)}</b><span>${safe(l.action)}</span><span>${safe(l.app)}</span><span>${safe(l.ip)}</span><span style="color:${l.result==='Bloqueado'?bad:ok}">${l.result}</span><small>${safe(l.detail)}</small></div>`).join('')}
+function renderSessions(){$('sessionList').innerHTML=users.map((u,i)=>`<div class=row><span><b>${safe(u)}</b><br><small style="color:var(--muted)">${['Financeiro','TI','RH','Vendas','Admin'][i%5]} · ${['Windows','macOS','iPhone','Android','Linux'][i%5]}</small></span><span class=badge>Ativo</span></div>`).join('')}function renderUsers(){$('usersTable').innerHTML=users.map(u=>`<div class=row><span>${safe(u)}</span><span>${Math.random()>.45?'Diretório':'Nativo'}</span><button class="btn ghost small" onclick="addLog('${safe(u)}','Reset MFA','Usuário','Sucesso','Fator reiniciado');toast('MFA resetado')">Reset MFA</button></div>`).join('')}function renderApps(){$('appsList').innerHTML=apps.map(a=>`<div class=row><b>${safe(a)}</b><span>SAML/OIDC</span><span class=badge>SSO ativo</span><button class="btn ghost small" onclick="addLog('Admin','Configuração SSO','${safe(a)}','Sucesso','Fluxo atualizado')">Editar</button></div>`).join('')}function renderPolicies(){let html=policies.map((p,i)=>`<div class=policyItem><label><input type=checkbox checked onchange="togglePolicy(${i},this.checked)"> <b>${safe(p)}</b></label><br><small style="color:var(--muted)">Política editável e aplicada ao motor de decisão.</small></div>`).join('');$('policyList').innerHTML=html;$('quickPolicyList').innerHTML=policies.slice(0,4).map((p,i)=>`<div class=row><span>${safe(p)}</span><span class="badge ${i===1?'warn':''}">Ativa</span></div>`).join('')}function togglePolicy(i,on){addLog('Administrador','Política alterada',policies[i],on?'Sucesso':'Bloqueado',on?'Ativada':'Desativada');toast(on?'Política ativada':'Política desativada')}
+function addUser(){let v=$('newUser').value.trim()||'novo.usuario@empresa.com';users.unshift(v.split('@')[0].replace(/[._]/g,' ').replace(/\b\w/g,c=>c.toUpperCase()));addLog(v,'Criação de identidade',$('userType').value,'Sucesso','Usuário criado');renderUsers();renderSessions();toast('Identidade criada')}
+function setRole(r){$('roleResult').innerHTML=`<div class=row><b>Função</b><span>${r}</span></div><div class=row><b>Apps permitidos</b><span>${r==='Admin'?'Todos':r==='TI'?'Azure Portal, Logs, SSO':'SAP Finance, Workspace'}</span></div><div class=row><b>Regra ABAC</b><span>${r==='Admin'?'MFA forte + exceção controlada':'Brasil + horário comercial + dispositivo confiável'}</span></div>`;addLog('Administrador','Alteração RBAC/ABAC',r,'Sucesso','Perfil recalculado');toast('Perfil aplicado')}
+function addApp(){let n=$('appName').value.trim()||'Nova aplicação';apps.unshift(n);addLog('Administrador','Integração SSO',n,'Sucesso',$('appProtocol').value+' configurado');renderApps();toast('Aplicação integrada')}
+function addPolicy(){let p=($('policyAction').value+' quando '+$('policyCond').value+' em '+$('policyTarget').value);policies.unshift(p);addLog('Administrador','Política salva',$('policyTarget').value,'Sucesso',p);renderPolicies();toast('Política salva')}
+function renderMfa(){$('mfaToggles').innerHTML=mfas.map(m=>`<div class=row><b>${m}</b><label><input type=checkbox checked onchange="addLog('Administrador','MFA alterado','${m}',this.checked?'Sucesso':'Bloqueado',this.checked?'Ativado':'Desativado');toast('MFA atualizado')"> Ativo</label></div>`).join('')}
+let currentDevice='Windows 11 / Chrome',currentLocation='São Paulo, Brasil',currentIp='189.55.12.11';function setDevice(btn,d,l,ip){document.querySelectorAll('.device-tabs button').forEach(b=>b.classList.remove('active'));btn.classList.add('active');currentDevice=d;currentLocation=l;currentIp=ip;$('phoneDevice').textContent=d;$('phoneLocation').textContent=l;$('phoneIp').textContent=ip;let risky=l.includes('Lisboa')||d.includes('Linux');$('phoneRisk').textContent=risky?'Médio · 62/100':'Baixo · 28/100';toast('Contexto atualizado')}
+function desktopLogin(){syncStudent();$('phoneUser').textContent=$('loginEmail').value;$('phoneApp').textContent=$('loginApp').value;$('phoneDevice').textContent=currentDevice;$('phoneLocation').textContent=currentLocation;$('phoneIp').textContent=currentIp;$('requestTitle').textContent='Nova solicitação';$('approvalBox').style.background='rgba(255,20,147,.10)';$('approvalBox').style.borderColor='rgba(255,20,147,.32)';$('approvalBox').textContent='Push recebido. Revise o contexto antes de aprovar.';addLog($('loginEmail').value,'Solicitação MFA',$('loginApp').value,'Pendente','Push enviado ao celular');toast('Push enviado para o celular')}
+function approveAccess(){$('requestTitle').textContent='Solicitação aprovada';$('approvalBox').style.background='rgba(55,232,132,.15)';$('approvalBox').style.borderColor='rgba(55,232,132,.35)';$('approvalBox').textContent='✓ Acesso aprovado às '+new Date().toLocaleTimeString('pt-BR');addLog($('phoneUser').textContent,'Aprovação MFA',$('phoneApp').textContent,'Sucesso','Push aprovado');toast('Acesso aprovado')}function rejectAccess(){$('requestTitle').textContent='Solicitação rejeitada';$('approvalBox').style.background='rgba(255,93,114,.15)';$('approvalBox').style.borderColor='rgba(255,93,114,.35)';$('approvalBox').textContent='× Solicitação rejeitada às '+new Date().toLocaleTimeString('pt-BR');addLog($('phoneUser').textContent,'Rejeição MFA',$('phoneApp').textContent,'Bloqueado','Push rejeitado');toast('Acesso rejeitado')}
+function evalRule(){let deny=$('country').value==='Desconhecido'||$('hour').value==='Madrugada'||$('device').value==='Dispositivo novo'||$('ip').value==='IP anônimo';$('ruleResult').innerHTML=`<div class=row><b>Decisão</b><span class="badge ${deny?'bad':''}">${deny?'NEGAR ACESSO':'PERMITIR + MFA'}</span></div><p style="color:var(--muted)">Decisão baseada em país, horário, dispositivo, IP e exceção por função.</p>`;addLog('Motor de regras','Avaliação ABAC','Portal IAM',deny?'Bloqueado':'Sucesso',deny?'Atributo de risco detectado':'MFA requerido')}
+function showModule(id,btn){document.querySelectorAll('.module').forEach(m=>m.classList.remove('active'));$(id).classList.add('active');document.querySelectorAll('.nav button').forEach(b=>b.classList.remove('active'));btn.classList.add('active');$('pageTitle').textContent=btn.textContent.replace(/[⌂👤▦▣◎✉⚙☰➤⛓◉▥▤{}]/g,'').trim(); if(id==='portal')renderPortal(); if(id==='enrollment')paintQr(); if(id==='directory')syncDirectory(); if(id==='tenant')renderTenants()}
+function drawLine(){let c=$('lineChart'),ctx=c.getContext('2d'),w=c.width=c.offsetWidth*2,h=c.height=c.offsetHeight*2;ctx.clearRect(0,0,w,h);ctx.strokeStyle='rgba(255,255,255,.12)';for(let i=1;i<5;i++){ctx.beginPath();ctx.moveTo(0,h*i/5);ctx.lineTo(w,h*i/5);ctx.stroke()}let pts=Array.from({length:22},(_,i)=>[i*w/21,h-(45+Math.random()*80+(i>9&&i<15?50:0))*h/190]);ctx.beginPath();ctx.moveTo(pts[0][0],pts[0][1]);pts.forEach(p=>ctx.lineTo(p[0],p[1]));ctx.strokeStyle=pink;ctx.lineWidth=5;ctx.stroke();ctx.lineTo(w,h);ctx.lineTo(0,h);ctx.fillStyle='rgba(255,20,147,.16)';ctx.fill()}function drawDonut(){let c=$('donutChart'),ctx=c.getContext('2d'),w=c.width=c.offsetWidth*2,h=c.height=c.offsetHeight*2;ctx.clearRect(0,0,w,h);let cx=w*.32,cy=h*.52,r=Math.min(w,h)*.28,start=-Math.PI/2;[[45,pink],[28,'#66a6ff'],[13,'#37e884'],[8,'#ffd166'],[6,'#9aa8bd']].forEach(v=>{let a=v[0]/100*Math.PI*2;ctx.beginPath();ctx.moveTo(cx,cy);ctx.arc(cx,cy,r,start,start+a);ctx.fillStyle=v[1];ctx.fill();start+=a});ctx.beginPath();ctx.arc(cx,cy,r*.56,0,Math.PI*2);ctx.fillStyle='#101827';ctx.fill();['Push 45%','TOTP 28%','Biometria 13%','FIDO2 8%','Outros 6%'].forEach((t,i)=>{ctx.fillStyle=[pink,'#66a6ff','#37e884','#ffd166','#9aa8bd'][i];ctx.fillRect(w*.62,38+i*32,14,14);ctx.fillStyle='#dce6f4';ctx.font='22px Arial';ctx.fillText(t,w*.66,51+i*32)})}
+function updateOtp(){let code=String(Math.floor(100000+Math.random()*900000));$('otpBox').innerHTML=code.split('').map(n=>`<span>${n}</span>`).join('')}function tick(){document.querySelectorAll('.num').forEach(el=>{if(el.classList.contains('fixed-num')){el.textContent=el.dataset.fixed;return}let b=Number(el.dataset.base);if(!Number.isFinite(b))return;el.textContent=fmt(b+Math.floor(Math.random()*21))});$('riskValue').textContent=24+Math.floor(Math.random()*18);$('phoneClock').textContent=new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});if(Math.random()>.62)addLog(users[Math.floor(Math.random()*users.length)],'Login SSO',apps[Math.floor(Math.random()*apps.length)],Math.random()>.13?'Sucesso':'Bloqueado',Math.random()>.5?'MFA Push':'Regra ABAC');drawLine();drawDonut()}
+let steps=[['kpiUsers','KPIs de identidades, sessões, MFA e bloqueios atualizam em tempo real.'],['chartPanel','Gráfico de autenticações mostra comportamento de acesso e picos.'],['mfaChart','Distribuição dos fatores MFA usados: Push, TOTP, biometria e FIDO2.'],['sessions','Sessões ativas permitem visualizar usuário, área e dispositivo.'],['mapPanel','Mapa e percentuais demonstram contexto geográfico de acesso.'],['auditSmall','Logs de auditoria registram ações, decisões e alterações.'],['riskPanel','Risco adaptativo muda conforme IP, país, horário e dispositivo.'],['desktopSim','No desktop, simule o login em uma aplicação corporativa.'],['phoneSim','No celular, aprove ou rejeite a solicitação MFA sem nada sair da tela.'],['quickPolicies','Políticas rápidas mostram regras aplicadas ao ambiente.'],['policies','Crie políticas novas e ative/desative controles.'],['ident','Cadastre identidades e resete MFA.'],['access','Teste perfis RBAC/ABAC e veja permissões mudarem.'],['apps','Integre aplicações SSO por SAML2, OIDC, RADIUS ou API.'],['mfa','Ative ou desative métodos MFA.'],['magiclink','Envie e valide Magic Link com expiração e auditoria.'],['rules','Avalie o motor de regras por país, horário, IP e dispositivo.'],['directory','Sincronize múltiplos diretórios e vincule grupos a funções.'],['enrollment','Gere enrollment por QR Code, cupom, SMS, e-mail, Magic Link ou FIDO2.'],['portal','Explore o portal do usuário com apps, sessões, dispositivos e senha.'],['api','Use o API Explorer para validar, bloquear e consultar usuários.'],['tenant','Veja arquitetura multitenant, agentes, HA, backup e monitoramento.'],['reports','Gere relatórios de acesso, falhas, senha, MFA e identidades.'],['logs','Exporte logs para JSON. Ao finalizar, o certificado PNG aparece automaticamente.']];let tour=0,box=null,tourDone=localStorage.getItem('bsiam_done')==='yes';function updateCert(){ $('certBtn').textContent=tourDone?'Gerar certificado PNG':'Certificado PNG bloqueado'}updateCert();function resetTour(){tourDone=false;localStorage.removeItem('bsiam_done');updateCert();toast('Tour reiniciado')}
+function startTour(){tour=0;showTour()}function showTour(){document.querySelectorAll('.mark').forEach(e=>e.classList.remove('mark'));if(box)box.remove();let [id,txt]=steps[tour],el=$(id);if(!el)return;el.classList.add('mark');el.scrollIntoView({behavior:'smooth',block:'center'});setTimeout(()=>{let r=el.getBoundingClientRect();box=document.createElement('div');box.className='tourbox';box.innerHTML=`<b>${tour+1} de ${steps.length} · Tour guiado</b><p>${txt}</p><div class=tourcontrols><button class="btn ghost small" onclick="endTour(false)">Pausar</button><button class="btn small" onclick="nextTour()">${tour===steps.length-1?'Finalizar e emitir':'Próximo'}</button></div>`;document.body.appendChild(box);let bw=box.offsetWidth,bh=box.offsetHeight;box.style.left=Math.min(innerWidth-bw-12,Math.max(12,r.left))+'px';box.style.top=Math.min(innerHeight-bh-12,Math.max(12,r.bottom+10))+'px'},280)}function nextTour(){if(tour<steps.length-1){tour++;showTour()}else endTour(true)}function endTour(done){document.querySelectorAll('.mark').forEach(e=>e.classList.remove('mark'));if(box)box.remove();if(done){tourDone=true;localStorage.setItem('bsiam_done','yes');updateCert();toast('Tour concluído. Certificado liberado.');openCertificate()}else toast('Tour pausado')}
+function drawCertificate(){let c=$('certCanvas'),ctx=c.getContext('2d'),name=$('studentName').value.trim()||'Aluno(a) Be Safe';ctx.clearRect(0,0,c.width,c.height);let g=ctx.createLinearGradient(0,0,c.width,c.height);g.addColorStop(0,'#fff2fb');g.addColorStop(.5,'#fff');g.addColorStop(1,'#ffe0f4');ctx.fillStyle=g;ctx.fillRect(0,0,c.width,c.height);ctx.strokeStyle=pink;ctx.lineWidth=20;ctx.strokeRect(42,42,c.width-84,c.height-84);ctx.strokeStyle='rgba(166,0,98,.45)';ctx.lineWidth=3;ctx.strokeRect(80,80,c.width-160,c.height-160);for(let i=0;i<36;i++){ctx.fillStyle='rgba(255,20,147,.045)';ctx.beginPath();ctx.arc(150+i*43,120+Math.sin(i)*28,72,0,Math.PI*2);ctx.fill()}ctx.textAlign='center';ctx.fillStyle='#111827';ctx.font='900 76px Segoe UI,Arial';ctx.fillText('BE SAFE IAM',800,166);ctx.fillStyle=pink;ctx.font='800 28px Segoe UI,Arial';ctx.fillText('CERTIFICADO DE CONCLUSÃO',800,224);ctx.fillStyle='#4b5563';ctx.font='28px Segoe UI,Arial';ctx.fillText('Certificamos que',800,318);ctx.fillStyle='#111827';ctx.font='900 66px Georgia,serif';ctx.fillText(name,800,398);ctx.strokeStyle='rgba(255,20,147,.5)';ctx.beginPath();ctx.moveTo(330,425);ctx.lineTo(1270,425);ctx.stroke();ctx.fillStyle='#374151';ctx.font='28px Segoe UI,Arial';wrap(ctx,($('iamSummary').value||'concluiu o tour guiado da plataforma Be Safe IAM, compreendendo SSO, MFA, RBAC, ABAC, FIDO2, motor de regras, políticas e auditoria.'),800,505,1120,40);ctx.fillStyle=pink;ctx.font='800 25px Segoe UI,Arial';ctx.fillText('Treinamento prático · Dashboard funcional · Aprovação mobile · Políticas interativas',800,735);ctx.fillStyle='#111827';ctx.textAlign='left';ctx.font='26px Segoe UI,Arial';ctx.fillText('Data: '+new Date().toLocaleDateString('pt-BR'),145,835);ctx.fillText('ID: BSIAM-'+Math.random().toString(36).slice(2,8).toUpperCase(),145,875);ctx.textAlign='right';ctx.font='italic 44px Georgia,serif';ctx.fillText('Mariana BS',1370,835);ctx.font='22px Segoe UI,Arial';ctx.fillText('Instrutora',1370,872);ctx.fillStyle='rgba(255,20,147,.12)';ctx.beginPath();ctx.arc(1340,210,92,0,Math.PI*2);ctx.fill();ctx.strokeStyle=pink;ctx.lineWidth=7;ctx.stroke();ctx.fillStyle=pink;ctx.font='900 50px Segoe UI,Arial';ctx.textAlign='center';ctx.fillText('IAM',1340,228)}function wrap(ctx,text,x,y,max,l){let words=text.split(' '),line='';ctx.textAlign='center';for(let w of words){let t=line+w+' ';if(ctx.measureText(t).width>max&&line){ctx.fillText(line,x,y);line=w+' ';y+=l}else line=t}ctx.fillText(line,x,y)}function openCertificate(){if(!tourDone){toast('Finalize o tour guiado para liberar o certificado.');return}if(!$('studentName').value.trim()){toast('Digite o nome do aluno primeiro.');$('studentName').focus();return}drawCertificate();$('certModal').style.display='flex'}function closeCertificate(){$('certModal').style.display='none'}function downloadCertificate(){drawCertificate();let a=document.createElement('a');a.href=$('certCanvas').toDataURL('image/png');a.download='certificado-be-safe-iam.png';a.click()}function exportLogs(){let blob=new Blob([JSON.stringify(logs,null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='be-safe-iam-logs.json';a.click()}
+
+function enterPlatform(){
+  let n=$('studentNameLanding').value.trim();
+  if(!n){toast('Digite o nome do aluno para iniciar.');$('studentNameLanding').focus();return}
+  $('studentName').value=n;
+  syncStudent();
+  $('landingPage').classList.add('hidden');
+  $('appRoot').classList.remove('hidden');
+  toast('Bem-vinda ao Be Safe IAM, '+n+'.');
+}
+$('studentNameLanding').addEventListener('input',()=>{
+  let n=$('studentNameLanding').value.trim().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/g,'.').replace(/^\.|\.$/g,'')||'aluno';
+  $('landingPhoneUser').textContent=n+'@empresa.com';
+});
+
+
+function syncDirectory(){
+  let mode=$('adMode').value, sync=$('adSync').value, name=$('adName').value||'corp.local';
+  $('directoryStatus').innerHTML=`<div class="policyItem"><b>${safe(name)}</b><div class=row><span>Status</span><span class="badge ${mode.includes('alerta')?'warn':''}">${safe(mode)}</span></div><div class=row><span>Sync</span><span>${safe(sync)}</span></div><div class=row><span>Grupos importados</span><span>42</span></div><div class=row><span>Usuários importados</span><span>8.112</span></div></div><div class="policyItem"><b>Mapeamento grupo → função</b><div class=row><span>GG_FINANCEIRO</span><span>Financeiro</span></div><div class=row><span>GG_TI_ADMIN</span><span>Admin</span></div><div class=row><span>GG_AUDITORIA</span><span>Auditoria</span></div></div>`;
+  addLog('Administrador','Sincronização de diretório',name,'Sucesso',mode+' · '+sync);toast('Diretório sincronizado');
+}
+function paintQr(){
+  let q=$('fakeQr'); if(!q)return;
+  q.innerHTML='';
+  for(let i=0;i<49;i++){let d=document.createElement('div');d.style.borderRadius='3px';d.style.background=(i%3===0||i%5===0||Math.random()>.58)?'#111827':'#fff';q.appendChild(d)}
+}
+function generateEnrollment(){
+  let u=$('enrollUser').value.trim()||$('loginEmail').value||'usuario@empresa.com', m=$('enrollMethod').value;
+  paintQr();
+  $('enrollmentResult').innerHTML=`<div class=row><b>Usuário</b><span>${safe(u)}</span></div><div class=row><b>Método</b><span class=badge>${safe(m)}</span></div><div class=row><b>Status</b><span>Enrollment gerado e pendente de validação</span></div>`;
+  addLog(u,'Enrollment MFA',m,'Pendente','Registro de segundo fator iniciado');toast('Enrollment gerado');
+}
+function renderPortal(){
+  if(!$('userPortalApps'))return;
+  $('userPortalApps').innerHTML=apps.slice(0,5).map(a=>`<div class=row><span>${safe(a)}</span><button class="btn ghost small" onclick="addLog('${safe($('loginEmail').value)}','Acesso portal','${safe(a)}','Sucesso','SSO pelo portal do usuário');toast('Abrindo ${safe(a)}')">Abrir</button></div>`).join('');
+  $('userDevices').innerHTML=['iPhone confiável','Notebook corporativo','Token FIDO2'].map(d=>`<div class=row><span>${d}</span><span class=badge>Ativo</span></div>`).join('');
+  $('userSessions').innerHTML=['Sessão atual · Chrome','Mobile app · iOS','SSO · SAP Finance'].map(s=>`<div class=row><span>${s}</span><span class=badge>Ativa</span></div>`).join('');
+}
+function addDevice(){addLog($('loginEmail').value,'Dispositivo cadastrado','Portal do usuário','Sucesso','Novo autenticador vinculado');toast('Dispositivo adicionado')}
+function revokeSessions(){addLog($('loginEmail').value,'Sessões revogadas','Portal do usuário','Sucesso','Sessões encerradas pelo usuário');toast('Sessões encerradas')}
+function changePassword(){addLog($('loginEmail').value,'Alteração de senha','Portal do usuário','Sucesso','Política de complexidade validada');toast('Senha alterada')}
+function runApi(){
+  let method=$('apiMethod').value, user=$('apiUser').value.trim()||$('loginEmail').value||'usuario@empresa.com';
+  let body={requestId:'api_'+Math.random().toString(36).slice(2,8),method,user,status:'success',timestamp:new Date().toISOString(),message:'Operação simulada executada com sucesso'};
+  $('apiOutput').textContent=JSON.stringify(body,null,2);
+  addLog(user,'API Explorer',method,'Sucesso','Método administrativo executado');toast('API executada');
+}
+
+const tenantData=[
+  {name:'Be Safe Inc',type:'Corporativo',users:'8.642',apps:'22',mfa:'97%',risk:'Baixo',case:'Tenant matriz com SSO para Office, VPN, Intranet e apps internos.'},
+  {name:'Be Safe Finance',type:'Financeiro',users:'2.184',apps:'11',mfa:'100%',risk:'Médio',case:'Exige FIDO2 para administradores, MFA forte para SAP Finance e bloqueio fora do horário.'},
+  {name:'Be Safe Health',type:'Saúde',users:'1.276',apps:'8',mfa:'94%',risk:'Baixo',case:'Portal clínico com ABAC por unidade, horário e dispositivo confiável.'}
+];
+function renderTenants(){
+  if(!$('tenantCases'))return;
+  $('tenantCases').innerHTML=tenantData.map(t=>`<div class="tenantCase">
+    <div class="tenantHead"><b>${safe(t.name)}</b><span class="badge ${t.risk==='Médio'?'warn':''}">${safe(t.risk)}</span></div>
+    <small style="color:var(--muted)">${safe(t.case)}</small>
+    <div class="tenantMetrics"><span>Usuários<br><b>${t.users}</b></span><span>Apps<br><b>${t.apps}</b></span><span>MFA<br><b>${t.mfa}</b></span></div>
+    <button class="btn small ghost" onclick="selectTenant('${safe(t.name)}')">Abrir case</button>
+  </div>`).join('');
+  $('tenantOps').innerHTML=`<div class=row><span>Tenant selecionado</span><span id="selectedTenant" class=badge>Be Safe Inc</span></div>
+  <div class=row><span>Isolamento lógico</span><span class=badge>Ativo</span></div>
+  <div class=row><span>Políticas herdadas</span><span>Global + específicas</span></div>
+  <div class=row><span>Conector AD</span><span class=badge>Saudável</span></div>
+  <div class=row><span>Canal MFA</span><span>Push · TOTP · FIDO2</span></div>`;
+  $('tenantTimeline').innerHTML=[
+    ['14:02','Be Safe Finance','Pico de tentativas TOTP em SAP Finance','warn'],
+    ['14:05','Be Safe Inc','Failover do Agent + RADIUS validado',''],
+    ['14:08','Be Safe Health','Nova política ABAC aplicada ao Portal Clínico',''],
+    ['14:11','Be Safe Finance','Admin exigiu FIDO2 para ação privilegiada','warn']
+  ].map(e=>`<div class=row><span>${e[0]}</span><b>${e[1]}</b><span>${e[2]}</span><span class="badge ${e[3]}">${e[3]?'Atenção':'OK'}</span></div>`).join('');
+}
+function selectTenant(name){
+  if($('selectedTenant'))$('selectedTenant').textContent=name;
+  addLog('Administrador','Tenant aberto',name,'Sucesso','Case multitenant visualizado');
+  toast('Case aberto: '+name);
+}
+
+
+function sendMagicLink(){
+  let user=$('magicUser').value.trim()||$('loginEmail').value||'usuario@empresa.com';
+  let app=$('magicApp').value, risk=$('magicRisk').value;
+  let token='ml_'+Math.random().toString(36).slice(2,10).toUpperCase();
+  $('magicResult').innerHTML=`<div class=row><b>Usuário</b><span>${safe(user)}</span></div><div class=row><b>Aplicação</b><span>${safe(app)}</span></div><div class=row><b>Token</b><span class=badge>${token}</span></div><div class=row><b>Expiração</b><span>5 minutos</span></div><div class=row><b>Decisão</b><span class="badge ${risk==='Alto'?'warn':''}">${risk==='Alto'?'Magic Link + MFA adicional':'Magic Link permitido'}</span></div>`;
+  $('magicEmail').innerHTML=`<div style="font-size:12px;color:var(--muted)">De: iam@besafe.inc</div><div style="font-size:12px;color:var(--muted)">Para: ${safe(user)}</div><h3 style="margin:10px 0;color:#fff">Acesso seguro ao ${safe(app)}</h3><p style="color:#dce8f8;font-size:13px">Solicitação criada com risco <b>${safe(risk)}</b>. Este link expira em 5 minutos e será auditado.</p><div class="riskchip"><span>Token</span><b>${token}</b></div><button class="btn small" onclick="consumeMagicLink()">Acessar com Magic Link</button>`;
+  addLog(user,'Magic Link enviado',app,'Pendente','Token temporário emitido');toast('Magic Link enviado');
+}
+function consumeMagicLink(){
+  let user=$('magicUser')&&$('magicUser').value.trim()?$('magicUser').value.trim():$('loginEmail').value;
+  let app=$('magicApp')?$('magicApp').value:'Portal Corporativo';
+  addLog(user,'Magic Link consumido',app,'Sucesso','Link validado e sessão SSO criada');
+  toast('Magic Link validado. Sessão criada.');
+  if($('approvalBox')){$('approvalBox').textContent='Magic Link validado. Sessão SSO criada.';$('approvalBox').style.background='rgba(55,232,132,.15)';$('approvalBox').style.borderColor='rgba(55,232,132,.35)'}
+}
+
+function getReportData(type){
+  const tenant=$('reportTenant')?$('reportTenant').value:'Be Safe Inc';
+  const period=$('reportPeriod')?$('reportPeriod').value:'Últimos 30 dias';
+  const profile=$('reportProfile')?$('reportProfile').value:'Executivo';
+  const base={
+    success:{title:'Relatório de Acessos com Sucesso',total:'12.408',risk:'Baixo',trend:'+8,4%',coverage:'97%',summary:'A maior parte dos acessos foi realizada via SSO corporativo com MFA válido. Não há indício de degradação operacional no período.',rows:[['Be Safe Inc','8.944','SSO OIDC','98,7%'],['Be Safe Finance','2.716','FIDO2 + Push','100%'],['Be Safe Health','748','TOTP + ABAC','94,1%']]},
+    fail:{title:'Relatório de Acessos com Falha',total:'184',risk:'Médio',trend:'-3,1%',coverage:'91%',summary:'As falhas estão concentradas em senha incorreta, rejeição de MFA e políticas ABAC. Recomenda-se revisar usuários recorrentes e IPs anônimos.',rows:[['Senha incorreta','71','Usuário','Médio'],['MFA rejeitado','43','Autenticação','Alto'],['Fora do horário','38','ABAC','Médio'],['IP anônimo','32','Rede','Alto']]},
+    password:{title:'Relatório de Redefinições de Senha',total:'72',risk:'Baixo',trend:'+2,0%',coverage:'99%',summary:'O volume de redefinições está dentro do esperado. A maioria ocorreu via self-service com validação de política de complexidade.',rows:[['Self-service','49','Concluído','68%'],['Help Desk','18','Concluído','25%'],['Bloqueio automático','5','Revisar','7%']]},
+    identity:{title:'Relatório de Identidades por Tipo',total:'8.642',risk:'Baixo',trend:'+1,7%',coverage:'96%',summary:'Predominância de identidades sincronizadas por diretório. Identidades nativas e convidadas devem permanecer sob revisão periódica.',rows:[['Active Directory','7.086','82%','Sincronizado'],['Nativas','1.210','14%','Local'],['Convidadas','346','4%','Temporário']]},
+    mfa:{title:'Relatório de MFA Utilizado',total:'6.421',risk:'Baixo',trend:'+11,2%',coverage:'97%',summary:'Push e TOTP concentram o uso. FIDO2 apresenta adoção crescente em perfis privilegiados. Magic Link é usado para fluxos de baixo atrito.',rows:[['Push','2.889','45%','App'],['TOTP','1.798','28%','Wallet'],['FIDO2','899','14%','Passwordless'],['Magic Link','578','9%','E-mail'],['SMS/E-mail','257','4%','Fallback']]},
+    admin:{title:'Relatório de Eventos Administrativos',total:'316',risk:'Médio',trend:'+4,6%',coverage:'100%',summary:'Eventos administrativos auditáveis ocorreram dentro do padrão, com destaque para criação de usuários e reset de MFA. Exclusões exigem dupla revisão.',rows:[['Criação de usuários','122','OK','Provisionamento'],['Modificação de perfil','96','OK','RBAC'],['Exclusão/desativação','31','Revisado','Governança'],['Reset MFA','67','OK','Suporte']]}
+  };
+  const r=base[type]||base.success;
+  return {...r,tenant,period,profile,type,generatedAt:new Date().toLocaleString('pt-BR')};
+}
+function generateReport(type){
+  const r=getReportData(type);
+  const rows=r.rows.map(x=>`<tr><td>${safe(x[0])}</td><td><b>${safe(x[1])}</b></td><td>${safe(x[2])}</td><td>${safe(x[3])}</td></tr>`).join('');
+  $('reportOutput').innerHTML=`<div class="reportDesigner">
+    <div class="reportPreview" id="reportPreview">
+      <div class="reportCover">
+        <span class="reportTag">${safe(r.profile)}</span>
+        <h3>${safe(r.title)}</h3>
+        <p>${safe(r.tenant)} · ${safe(r.period)} · Gerado em ${safe(r.generatedAt)}</p>
+      </div>
+      <div class="reportBody">
+        <div class="reportKpis">
+          <div class="reportKpi"><small>Total</small><b>${safe(r.total)}</b></div>
+          <div class="reportKpi"><small>Risco</small><b>${safe(r.risk)}</b></div>
+          <div class="reportKpi"><small>Tendência</small><b>${safe(r.trend)}</b></div>
+          <div class="reportKpi"><small>Cobertura</small><b>${safe(r.coverage)}</b></div>
+        </div>
+        <div class="reportInsight"><b>Resumo executivo:</b> ${safe(r.summary)}</div>
+        <table class="reportTable">
+          <thead><tr><th>Categoria</th><th>Volume</th><th>Controle</th><th>Status</th></tr></thead>
+          <tbody>${rows}</tbody>
+        </table>
+        <div class="reportInsight"><b>Recomendação:</b> manter auditoria contínua, revisar exceções de acesso, validar grupos privilegiados e acompanhar adoção de FIDO2/Magic Link conforme risco.</div>
+      </div>
+    </div>
+    <div class="reportSide">
+      <div class="policyItem"><b>Conteúdo do PDF</b><div class=row><span>Capa executiva</span><span class=badge>Sim</span></div><div class=row><span>KPIs</span><span class=badge>Sim</span></div><div class=row><span>Tabela detalhada</span><span class=badge>Sim</span></div><div class=row><span>Resumo e recomendação</span><span class=badge>Sim</span></div></div>
+      <div class="policyItem"><b>Exportação</b><p style="color:var(--muted)">O botão abre uma versão formatada. Escolha “Salvar como PDF” na janela de impressão.</p><div class="reportActions"><button class="btn" onclick="downloadReportPdf('${type}')">Baixar PDF</button><button class="btn ghost" onclick="exportReport('${type}')">JSON</button></div></div>
+    </div>
+  </div>`;
+  addLog('Administrador','Relatório gerado',r.title,'Sucesso','Preview PDF elaborado atualizado');toast('Relatório elaborado: '+r.title);
+}
+function downloadReportPdf(type){
+  const r=getReportData(type);
+  const rows=r.rows.map(x=>`<tr><td>${safe(x[0])}</td><td><b>${safe(x[1])}</b></td><td>${safe(x[2])}</td><td>${safe(x[3])}</td></tr>`).join('');
+  const doc=`<!doctype html><html><head><meta charset="utf-8"><title>${safe(r.title)}</title>
+  <style>
+    @page{size:A4;margin:14mm}body{font-family:Arial,Segoe UI,sans-serif;color:#111827;margin:0;background:white}.cover{background:linear-gradient(135deg,#111827,#3b0a2a 55%,#ff1493);color:white;padding:30px;border-radius:18px;margin-bottom:18px}.tag{display:inline-block;background:#ffe4f4;color:#9d005d;border-radius:999px;padding:6px 10px;font-weight:800;font-size:12px}.cover h1{font-size:30px;margin:14px 0 6px}.cover p{margin:0;color:#ffe7f6}.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:16px 0}.kpi{border:1px solid #e5e7eb;border-radius:14px;padding:12px}.kpi small{display:block;color:#6b7280;text-transform:uppercase;font-size:10px;font-weight:800}.kpi b{display:block;font-size:24px;margin-top:6px}.box{border-left:5px solid #ff1493;background:#fff1f8;padding:13px;border-radius:12px;margin:14px 0;color:#374151}table{width:100%;border-collapse:collapse;margin-top:14px}th{background:#111827;color:white;text-align:left;padding:10px;font-size:12px}td{border-bottom:1px solid #e5e7eb;padding:10px;font-size:12px}.footer{margin-top:24px;border-top:1px solid #e5e7eb;padding-top:12px;color:#6b7280;font-size:12px;display:flex;justify-content:space-between}.brand{color:#ff1493;font-weight:900}
+  </style></head><body>
+    <section class="cover"><span class="tag">${safe(r.profile)}</span><h1>${safe(r.title)}</h1><p>${safe(r.tenant)} · ${safe(r.period)} · Gerado em ${safe(r.generatedAt)}</p></section>
+    <section class="kpis"><div class="kpi"><small>Total</small><b>${safe(r.total)}</b></div><div class="kpi"><small>Risco</small><b>${safe(r.risk)}</b></div><div class="kpi"><small>Tendência</small><b>${safe(r.trend)}</b></div><div class="kpi"><small>Cobertura</small><b>${safe(r.coverage)}</b></div></section>
+    <div class="box"><b>Resumo executivo:</b> ${safe(r.summary)}</div>
+    <table><thead><tr><th>Categoria</th><th>Volume</th><th>Controle</th><th>Status</th></tr></thead><tbody>${rows}</tbody></table>
+    <div class="box"><b>Recomendação:</b> manter auditoria contínua, revisar exceções de acesso, validar grupos privilegiados e acompanhar adoção de FIDO2/Magic Link conforme risco.</div>
+    <div class="footer"><span class="brand">Be Safe IAM</span><span>Mariana BS — Instrutora</span></div>
+    <script>window.onload=()=>{setTimeout(()=>window.print(),350)}<\/script>
+  </body></html>`;
+  const w=window.open('','_blank');
+  if(!w){toast('Permita pop-ups para gerar o PDF.');return}
+  w.document.open();w.document.write(doc);w.document.close();
+  addLog('Administrador','PDF de relatório solicitado',r.title,'Sucesso','Janela de impressão PDF aberta');
+}
+function exportReport(type){
+  let payload={...getReportData(type),source:'Be Safe IAM',format:'json'};
+  let blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='be-safe-iam-report-'+type+'.json';a.click();
+}
+
+
+function reportEvent(r){addLog('Administrador','Relatório gerado',r,'Sucesso','Exportação simulada disponível');toast('Relatório gerado: '+r)}
+
+renderSessions();renderUsers();renderApps();renderMfa();renderPolicies();paintQr();renderPortal();syncDirectory();renderTenants();if($('reportOutput'))generateReport('success');setRole('Financeiro');updateOtp();for(let i=0;i<8;i++)addLog(users[i%users.length],['Login SSO','Reset de senha','Acesso app','MFA'][i%4],apps[i%apps.length],i===3?'Bloqueado':'Sucesso',i===3?'Senha inválida':'Evento normal');tick();setInterval(tick,4500);setInterval(updateOtp,30000);window.addEventListener('resize',()=>{drawLine();drawDonut()});
+</script>
+</body></html>
