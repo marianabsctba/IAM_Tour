@@ -195,6 +195,26 @@
 @media(max-width:980px){.reportDesigner{grid-template-columns:1fr}.reportKpis{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:520px){.reportKpis{grid-template-columns:1fr}}
 
+
+/* Editor avançado SAML/OIDC/RADIUS/REST */
+.integrationEditor{display:grid;grid-template-columns:1fr;gap:14px;margin-top:12px}
+.integrationTabs{display:flex;gap:8px;flex-wrap:wrap}
+.integrationTabs button{border:1px solid #34455e;background:#121b2b;color:#dce8f8;border-radius:12px;padding:9px 12px;cursor:pointer;font-weight:850}
+.integrationTabs button.active{background:linear-gradient(90deg,var(--pink),var(--pink3));border-color:var(--pink);color:#fff}
+.integrationForm{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;border:1px solid #30445f;background:#0d1523;border-radius:18px;padding:14px}
+.integrationForm .full{grid-column:1/-1}
+.integrationForm label{display:block;margin:0;color:#dce8f8;font-size:12px;font-weight:850}
+.integrationForm input,.integrationForm select,.integrationForm textarea{margin-top:6px}
+.integrationForm textarea{min-height:76px;resize:vertical}
+.switchLine{display:flex;align-items:center;justify-content:space-between;gap:10px;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.035);border-radius:14px;padding:10px}
+.switchLine input{accent-color:var(--pink);transform:scale(1.15);width:auto}
+.configPreview{background:#07101d;border:1px solid #30445f;border-radius:18px;padding:14px;overflow:auto;max-height:360px}
+.configPreview pre{margin:0;white-space:pre-wrap;color:#dce8f8;font-size:12px;line-height:1.5}
+.testResult{border-radius:16px;border:1px solid rgba(255,20,147,.32);background:rgba(255,20,147,.08);padding:12px;color:#dce8f8}
+.fileMock{display:flex;align-items:center;gap:10px;margin-top:6px}
+.fileMock input{padding:9px}
+@media(max-width:820px){.integrationForm{grid-template-columns:1fr}}
+
 </style>
 </head>
 <body>
@@ -265,7 +285,49 @@
     </div>
     <div id="ident" class="module panel"><h3>Identidades</h3><div class="policyEditor"><input id="newUser" class="field" placeholder="email do usuário"><select id="userType"><option>Nativo</option><option>Active Directory</option><option>Convidado</option></select></div><button class="btn" onclick="addUser()">Criar identidade</button><div id="usersTable" class="table"></div></div>
     <div id="access" class="module panel"><h3>RBAC / ABAC</h3><p style="color:var(--muted)">Clique nos perfis para alterar permissões e regras de acesso.</p><div class="topActions"><button class="btn ghost" onclick="setRole('Financeiro')">Financeiro</button><button class="btn ghost" onclick="setRole('TI')">TI</button><button class="btn ghost" onclick="setRole('Admin')">Admin</button><button class="btn ghost" onclick="setRole('RH')">RH</button></div><div id="roleResult" style="margin-top:12px"></div></div>
-    <div id="apps" class="module panel"><h3>Aplicações SSO</h3><div class="policyEditor"><input id="appName" class="field" placeholder="Nome da aplicação"><select id="appProtocol"><option>SAML2</option><option>OIDC</option><option>RADIUS</option><option>REST API</option></select></div><button class="btn" onclick="addApp()">Integrar aplicação</button><div id="appsList" class="table"></div></div>
+    <div id="apps" class="module panel">
+      <h3>Aplicações SSO</h3>
+      <p style="color:var(--muted)">Configure integrações reais simuladas para SAML2, OIDC, RADIUS e REST API, com os principais parâmetros de cada protocolo.</p>
+
+      <div class="policyEditor">
+        <input id="appName" class="field" placeholder="Nome da aplicação" value="Office Be Safe Labs">
+        <select id="appProtocol" onchange="switchIntegration(this.value)">
+          <option>SAML2</option>
+          <option>OIDC</option>
+          <option>RADIUS</option>
+          <option>REST API</option>
+        </select>
+        <button class="btn" onclick="addApp()">Integrar aplicação</button>
+      </div>
+
+      <div class="integrationEditor">
+        <div class="integrationTabs">
+          <button id="tabSAML2" class="active" onclick="switchIntegration('SAML2')">SAML2</button>
+          <button id="tabOIDC" onclick="switchIntegration('OIDC')">OIDC</button>
+          <button id="tabRADIUS" onclick="switchIntegration('RADIUS')">RADIUS</button>
+          <button id="tabREST" onclick="switchIntegration('REST API')">REST API</button>
+        </div>
+
+        <div id="integrationFields"></div>
+
+        <div class="two">
+          <div class="configPreview">
+            <b style="color:#fff">Preview da configuração</b>
+            <pre id="integrationPreview"></pre>
+          </div>
+          <div>
+            <div class="testResult" id="integrationTest">Aguardando teste de integração.</div>
+            <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px">
+              <button class="btn" onclick="testIntegration()">Testar integração</button>
+              <button class="btn ghost" onclick="saveIntegrationConfig()">Salvar configuração</button>
+              <button class="btn ghost" onclick="downloadIntegrationConfig()">Baixar JSON</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="appsList" class="table" style="margin-top:12px"></div>
+    </div>
     <div id="mfa" class="module panel"><h3>Métodos MFA</h3><p style="color:var(--muted)">Ative/desative métodos. Isso altera logs, celular e políticas.</p><div id="mfaToggles"></div></div>
 
     <div id="magiclink" class="module panel">
@@ -439,6 +501,191 @@ function addLog(user,action,app,result,detail){logs.unshift({hora:new Date().toL
 function renderSessions(){$('sessionList').innerHTML=users.map((u,i)=>`<div class=row><span><b>${safe(u)}</b><br><small style="color:var(--muted)">${['Financeiro','TI','RH','Vendas','Admin'][i%5]} · ${['Windows','macOS','iPhone','Android','Linux'][i%5]}</small></span><span class=badge>Ativo</span></div>`).join('')}function renderUsers(){$('usersTable').innerHTML=users.map(u=>`<div class=row><span>${safe(u)}</span><span>${Math.random()>.45?'Diretório':'Nativo'}</span><button class="btn ghost small" onclick="addLog('${safe(u)}','Reset MFA','Usuário','Sucesso','Fator reiniciado');toast('MFA resetado')">Reset MFA</button></div>`).join('')}function renderApps(){$('appsList').innerHTML=apps.map(a=>`<div class=row><b>${safe(a)}</b><span>SAML/OIDC</span><span class=badge>SSO ativo</span><button class="btn ghost small" onclick="addLog('Admin','Configuração SSO','${safe(a)}','Sucesso','Fluxo atualizado')">Editar</button></div>`).join('')}function renderPolicies(){let html=policies.map((p,i)=>`<div class=policyItem><label><input type=checkbox checked onchange="togglePolicy(${i},this.checked)"> <b>${safe(p)}</b></label><br><small style="color:var(--muted)">Política editável e aplicada ao motor de decisão.</small></div>`).join('');$('policyList').innerHTML=html;$('quickPolicyList').innerHTML=policies.slice(0,4).map((p,i)=>`<div class=row><span>${safe(p)}</span><span class="badge ${i===1?'warn':''}">Ativa</span></div>`).join('')}function togglePolicy(i,on){addLog('Administrador','Política alterada',policies[i],on?'Sucesso':'Bloqueado',on?'Ativada':'Desativada');toast(on?'Política ativada':'Política desativada')}
 function addUser(){let v=$('newUser').value.trim()||'novo.usuario@empresa.com';users.unshift(v.split('@')[0].replace(/[._]/g,' ').replace(/\b\w/g,c=>c.toUpperCase()));addLog(v,'Criação de identidade',$('userType').value,'Sucesso','Usuário criado');renderUsers();renderSessions();toast('Identidade criada')}
 function setRole(r){$('roleResult').innerHTML=`<div class=row><b>Função</b><span>${r}</span></div><div class=row><b>Apps permitidos</b><span>${r==='Admin'?'Todos':r==='TI'?'Azure Portal, Logs, SSO':'SAP Finance, Workspace'}</span></div><div class=row><b>Regra ABAC</b><span>${r==='Admin'?'MFA forte + exceção controlada':'Brasil + horário comercial + dispositivo confiável'}</span></div>`;addLog('Administrador','Alteração RBAC/ABAC',r,'Sucesso','Perfil recalculado');toast('Perfil aplicado')}
+
+let currentIntegration='SAML2';
+const integrationDefaults={
+  'SAML2':{
+    tokenEndpointAuthMethod:'client_secret_post',
+    responseTypeCode:true,
+    responseTypeIdToken:true,
+    saml2Enabled:true,
+    userAuthenticationFlow:'BE_SAFE_USER_PASS',
+    sessionTime:'86400',
+    defaultDomain:'besafe-labs.com',
+    applicationUrl:'https://office.besafe-labs.com/',
+    redirectUrl:'https://sso.besafe-iam.local/backend/callback',
+    postLogoutRedirectUri:'https://office.besafe-labs.com/logout',
+    applicationName:'Office Be Safe Labs',
+    application:'OfficeBeSafeLabs',
+    profile:'Financeiro',
+    setNameIdAsEmail:true,
+    setEduPersonTargetedIdAsNameId:true,
+    metadataFile:'metadata-office-besafe.xml',
+    appLogo:'office-besafe.svg'
+  },
+  'OIDC':{
+    clientId:'office-besafe-labs',
+    clientSecret:'••••••••••••••••',
+    grantType:'authorization_code',
+    responseType:'code id_token',
+    scopes:'openid profile email groups offline_access',
+    issuer:'https://iam.besafe.inc',
+    authorizationEndpoint:'https://iam.besafe.inc/oauth2/authorize',
+    tokenEndpoint:'https://iam.besafe.inc/oauth2/token',
+    jwksUri:'https://iam.besafe.inc/.well-known/jwks.json',
+    redirectUri:'https://office.besafe-labs.com/auth/callback',
+    postLogoutRedirectUri:'https://office.besafe-labs.com/logout',
+    pkce:true,
+    refreshToken:true,
+    sessionTime:'86400'
+  },
+  'RADIUS':{
+    clientName:'VPN Be Safe Finance',
+    clientIp:'10.20.30.15',
+    sharedSecret:'••••••••••••',
+    authPort:'1812',
+    accountingPort:'1813',
+    timeout:'5',
+    retries:'3',
+    nasIdentifier:'vpn-besafe-finance',
+    otpType:'TOTP',
+    fallbackPasswordOnly:false,
+    allowedRole:'VPN_Users',
+    source:'Agent + FreeRADIUS'
+  },
+  'REST API':{
+    baseUrl:'https://iam.besafe.inc/api/v1',
+    authMode:'Bearer Token',
+    token:'••••••••••••',
+    validateCredentials:'/auth/validate-credentials',
+    validateToken:'/factors/validate-token',
+    userStatus:'/users/status',
+    blockUser:'/users/block',
+    unblockUser:'/users/unblock',
+    timeout:'10',
+    tls:true
+  }
+};
+function switchIntegration(type){
+  currentIntegration=type;
+  if($('appProtocol'))$('appProtocol').value=type;
+  ['SAML2','OIDC','RADIUS','REST'].forEach(t=>{let e=$('tab'+t); if(e)e.classList.remove('active')});
+  let tab=type==='REST API'?'tabREST':'tab'+type;
+  if($(tab))$(tab).classList.add('active');
+  renderIntegrationFields();
+  updateIntegrationPreview();
+}
+function fieldHtml(key,label,value,type='text'){
+  return `<label>${label}<input class="integrationInput" data-key="${key}" type="${type}" value="${safe(value)}" oninput="updateIntegrationPreview()"></label>`;
+}
+function fileHtml(key,label,value){
+  return `<label>${label}<div class="fileMock"><input class="integrationInput" data-key="${key}" value="${safe(value)}" oninput="updateIntegrationPreview()"><button class="btn ghost small" onclick="toast('Upload simulado: ${safe(label)}')" type="button">Procurar...</button></div></label>`;
+}
+function switchHtml(key,label,checked){
+  return `<label class="switchLine"><span>${label}</span><input class="integrationInput" data-key="${key}" type="checkbox" ${checked?'checked':''} onchange="updateIntegrationPreview()"></label>`;
+}
+function selectHtml(key,label,value,options){
+  return `<label>${label}<select class="integrationInput" data-key="${key}" onchange="updateIntegrationPreview()">${options.map(o=>`<option ${o===value?'selected':''}>${o}</option>`).join('')}</select></label>`;
+}
+function renderIntegrationFields(){
+  if(!$('integrationFields'))return;
+  let d=integrationDefaults[currentIntegration], out='';
+  if(currentIntegration==='SAML2'){
+    out=`<div class="integrationForm">
+      ${selectHtml('tokenEndpointAuthMethod','Token Endpoint Auth Method',d.tokenEndpointAuthMethod,['client_secret_post','client_secret_basic','private_key_jwt','none'])}
+      ${selectHtml('userAuthenticationFlow','User authentication flow',d.userAuthenticationFlow,['BE_SAFE_USER_PASS','BE_SAFE_PASSWORDLESS','BE_SAFE_MFA_REQUIRED','BE_SAFE_AD_PASS'])}
+      ${fieldHtml('sessionTime','Session time',d.sessionTime)}
+      ${fieldHtml('defaultDomain','Default domain',d.defaultDomain)}
+      ${fileHtml('metadataFile','SAML2 Metadata File',d.metadataFile)}
+      ${fieldHtml('applicationUrl','Application URL',d.applicationUrl)}
+      ${fieldHtml('redirectUrl','Redirect URL',d.redirectUrl)}
+      ${fileHtml('appLogo','App logo',d.appLogo)}
+      ${fieldHtml('postLogoutRedirectUri','Post Logout Redirect URI',d.postLogoutRedirectUri)}
+      ${fieldHtml('applicationName','Application name',d.applicationName)}
+      ${fieldHtml('application','Application',d.application)}
+      ${selectHtml('profile','Profile',d.profile,['Financeiro','TI','Admin','RH','Auditoria'])}
+      <div class="full policyEditor">${switchHtml('responseTypeCode','Response Type "Code"',d.responseTypeCode)}${switchHtml('responseTypeIdToken','Response Type "Id Token"',d.responseTypeIdToken)}${switchHtml('saml2Enabled','SAML2 Enabled',d.saml2Enabled)}</div>
+      <div class="full policyEditor">${switchHtml('setNameIdAsEmail','Set nameId as Email?',d.setNameIdAsEmail)}${switchHtml('setEduPersonTargetedIdAsNameId','Set eduPersonTargetedId as nameId?',d.setEduPersonTargetedIdAsNameId)}</div>
+    </div>`;
+  }
+  if(currentIntegration==='OIDC'){
+    out=`<div class="integrationForm">
+      ${fieldHtml('clientId','Client ID',d.clientId)}
+      ${fieldHtml('clientSecret','Client Secret',d.clientSecret)}
+      ${selectHtml('grantType','Grant Type',d.grantType,['authorization_code','client_credentials','refresh_token'])}
+      ${fieldHtml('responseType','Response Type',d.responseType)}
+      ${fieldHtml('scopes','Scopes',d.scopes)}
+      ${fieldHtml('issuer','Issuer',d.issuer)}
+      ${fieldHtml('authorizationEndpoint','Authorization Endpoint',d.authorizationEndpoint)}
+      ${fieldHtml('tokenEndpoint','Token Endpoint',d.tokenEndpoint)}
+      ${fieldHtml('jwksUri','JWKS URI',d.jwksUri)}
+      ${fieldHtml('redirectUri','Redirect URI',d.redirectUri)}
+      ${fieldHtml('postLogoutRedirectUri','Post Logout Redirect URI',d.postLogoutRedirectUri)}
+      ${fieldHtml('sessionTime','Session time',d.sessionTime)}
+      <div class="full policyEditor">${switchHtml('pkce','PKCE obrigatório',d.pkce)}${switchHtml('refreshToken','Refresh Token habilitado',d.refreshToken)}</div>
+    </div>`;
+  }
+  if(currentIntegration==='RADIUS'){
+    out=`<div class="integrationForm">
+      ${fieldHtml('clientName','Client name',d.clientName)}
+      ${fieldHtml('clientIp','Client IP / NAS IP',d.clientIp)}
+      ${fieldHtml('sharedSecret','Shared Secret',d.sharedSecret)}
+      ${fieldHtml('authPort','Authentication Port',d.authPort)}
+      ${fieldHtml('accountingPort','Accounting Port',d.accountingPort)}
+      ${fieldHtml('timeout','Timeout (segundos)',d.timeout)}
+      ${fieldHtml('retries','Retries',d.retries)}
+      ${fieldHtml('nasIdentifier','NAS Identifier',d.nasIdentifier)}
+      ${selectHtml('otpType','OTP por função',d.otpType,['TOTP','HOTP','PUSH','SYNC','Password only fallback'])}
+      ${fieldHtml('allowedRole','Role / Grupo permitido',d.allowedRole)}
+      ${fieldHtml('source','Fonte',d.source)}
+      <div class="full">${switchHtml('fallbackPasswordOnly','Permitir senha apenas quando usuário não tiver função MFA',d.fallbackPasswordOnly)}</div>
+    </div>`;
+  }
+  if(currentIntegration==='REST API'){
+    out=`<div class="integrationForm">
+      ${fieldHtml('baseUrl','Base URL',d.baseUrl)}
+      ${selectHtml('authMode','Auth Mode',d.authMode,['Bearer Token','mTLS','API Key','OAuth2 Client Credentials'])}
+      ${fieldHtml('token','Token / Secret',d.token)}
+      ${fieldHtml('validateCredentials','Validar credenciais',d.validateCredentials)}
+      ${fieldHtml('validateToken','Validar token MFA',d.validateToken)}
+      ${fieldHtml('userStatus','Informar estado do usuário',d.userStatus)}
+      ${fieldHtml('blockUser','Bloquear usuário',d.blockUser)}
+      ${fieldHtml('unblockUser','Desbloquear usuário',d.unblockUser)}
+      ${fieldHtml('timeout','Timeout',d.timeout)}
+      <div class="full">${switchHtml('tls','Exigir TLS/SSL',d.tls)}</div>
+    </div>`;
+  }
+  $('integrationFields').innerHTML=out;
+}
+function collectIntegrationConfig(){
+  let cfg={protocol:currentIntegration};
+  document.querySelectorAll('.integrationInput').forEach(i=>{cfg[i.dataset.key]=i.type==='checkbox'?i.checked:i.value});
+  return cfg;
+}
+function updateIntegrationPreview(){
+  if(!$('integrationPreview'))return;
+  $('integrationPreview').textContent=JSON.stringify(collectIntegrationConfig(),null,2);
+}
+function testIntegration(){
+  let cfg=collectIntegrationConfig(), result='OK', detail='Configuração validada com sucesso.';
+  if(cfg.protocol==='RADIUS' && (!cfg.clientIp || !cfg.sharedSecret)){result='ATENÇÃO';detail='Client IP e Shared Secret são obrigatórios para RADIUS.'}
+  if(cfg.protocol==='OIDC' && (!cfg.clientId || !cfg.redirectUri)){result='ATENÇÃO';detail='Client ID e Redirect URI são obrigatórios para OIDC.'}
+  if(cfg.protocol==='SAML2' && (!cfg.applicationUrl || !cfg.redirectUrl)){result='ATENÇÃO';detail='Application URL e Redirect URL são obrigatórios para SAML2.'}
+  $('integrationTest').innerHTML=`<b>Resultado:</b> ${result}<br><small>${detail}</small><br><br><span class="badge ${result==='OK'?'':'warn'}">${cfg.protocol}</span>`;
+  addLog('Administrador','Teste de integração',cfg.protocol,result==='OK'?'Sucesso':'Bloqueado',detail);
+  toast('Teste de integração: '+result);
+}
+function saveIntegrationConfig(){
+  let cfg=collectIntegrationConfig();
+  addLog('Administrador','Configuração salva',cfg.protocol,'Sucesso','Parâmetros de integração atualizados');
+  toast('Configuração '+cfg.protocol+' salva');
+}
+function downloadIntegrationConfig(){
+  let cfg=collectIntegrationConfig();
+  let blob=new Blob([JSON.stringify(cfg,null,2)],{type:'application/json'}),a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);a.download='be-safe-iam-'+currentIntegration.toLowerCase().replaceAll(' ','-')+'-config.json';a.click();
+}
+
 function addApp(){let n=$('appName').value.trim()||'Nova aplicação';apps.unshift(n);addLog('Administrador','Integração SSO',n,'Sucesso',$('appProtocol').value+' configurado');renderApps();toast('Aplicação integrada')}
 function addPolicy(){let p=($('policyAction').value+' quando '+$('policyCond').value+' em '+$('policyTarget').value);policies.unshift(p);addLog('Administrador','Política salva',$('policyTarget').value,'Sucesso',p);renderPolicies();toast('Política salva')}
 function renderMfa(){$('mfaToggles').innerHTML=mfas.map(m=>`<div class=row><b>${m}</b><label><input type=checkbox checked onchange="addLog('Administrador','MFA alterado','${m}',this.checked?'Sucesso':'Bloqueado',this.checked?'Ativado':'Desativado');toast('MFA atualizado')"> Ativo</label></div>`).join('')}
@@ -601,7 +848,27 @@ function downloadReportPdf(type){
   const doc=`<!doctype html><html><head><meta charset="utf-8"><title>${safe(r.title)}</title>
   <style>
     @page{size:A4;margin:14mm}body{font-family:Arial,Segoe UI,sans-serif;color:#111827;margin:0;background:white}.cover{background:linear-gradient(135deg,#111827,#3b0a2a 55%,#ff1493);color:white;padding:30px;border-radius:18px;margin-bottom:18px}.tag{display:inline-block;background:#ffe4f4;color:#9d005d;border-radius:999px;padding:6px 10px;font-weight:800;font-size:12px}.cover h1{font-size:30px;margin:14px 0 6px}.cover p{margin:0;color:#ffe7f6}.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:16px 0}.kpi{border:1px solid #e5e7eb;border-radius:14px;padding:12px}.kpi small{display:block;color:#6b7280;text-transform:uppercase;font-size:10px;font-weight:800}.kpi b{display:block;font-size:24px;margin-top:6px}.box{border-left:5px solid #ff1493;background:#fff1f8;padding:13px;border-radius:12px;margin:14px 0;color:#374151}table{width:100%;border-collapse:collapse;margin-top:14px}th{background:#111827;color:white;text-align:left;padding:10px;font-size:12px}td{border-bottom:1px solid #e5e7eb;padding:10px;font-size:12px}.footer{margin-top:24px;border-top:1px solid #e5e7eb;padding-top:12px;color:#6b7280;font-size:12px;display:flex;justify-content:space-between}.brand{color:#ff1493;font-weight:900}
-  </style></head><body>
+  
+/* Editor avançado SAML/OIDC/RADIUS/REST */
+.integrationEditor{display:grid;grid-template-columns:1fr;gap:14px;margin-top:12px}
+.integrationTabs{display:flex;gap:8px;flex-wrap:wrap}
+.integrationTabs button{border:1px solid #34455e;background:#121b2b;color:#dce8f8;border-radius:12px;padding:9px 12px;cursor:pointer;font-weight:850}
+.integrationTabs button.active{background:linear-gradient(90deg,var(--pink),var(--pink3));border-color:var(--pink);color:#fff}
+.integrationForm{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;border:1px solid #30445f;background:#0d1523;border-radius:18px;padding:14px}
+.integrationForm .full{grid-column:1/-1}
+.integrationForm label{display:block;margin:0;color:#dce8f8;font-size:12px;font-weight:850}
+.integrationForm input,.integrationForm select,.integrationForm textarea{margin-top:6px}
+.integrationForm textarea{min-height:76px;resize:vertical}
+.switchLine{display:flex;align-items:center;justify-content:space-between;gap:10px;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.035);border-radius:14px;padding:10px}
+.switchLine input{accent-color:var(--pink);transform:scale(1.15);width:auto}
+.configPreview{background:#07101d;border:1px solid #30445f;border-radius:18px;padding:14px;overflow:auto;max-height:360px}
+.configPreview pre{margin:0;white-space:pre-wrap;color:#dce8f8;font-size:12px;line-height:1.5}
+.testResult{border-radius:16px;border:1px solid rgba(255,20,147,.32);background:rgba(255,20,147,.08);padding:12px;color:#dce8f8}
+.fileMock{display:flex;align-items:center;gap:10px;margin-top:6px}
+.fileMock input{padding:9px}
+@media(max-width:820px){.integrationForm{grid-template-columns:1fr}}
+
+</style></head><body>
     <section class="cover"><span class="tag">${safe(r.profile)}</span><h1>${safe(r.title)}</h1><p>${safe(r.tenant)} · ${safe(r.period)} · Gerado em ${safe(r.generatedAt)}</p></section>
     <section class="kpis"><div class="kpi"><small>Total</small><b>${safe(r.total)}</b></div><div class="kpi"><small>Risco</small><b>${safe(r.risk)}</b></div><div class="kpi"><small>Tendência</small><b>${safe(r.trend)}</b></div><div class="kpi"><small>Cobertura</small><b>${safe(r.coverage)}</b></div></section>
     <div class="box"><b>Resumo executivo:</b> ${safe(r.summary)}</div>
@@ -623,6 +890,6 @@ function exportReport(type){
 
 function reportEvent(r){addLog('Administrador','Relatório gerado',r,'Sucesso','Exportação simulada disponível');toast('Relatório gerado: '+r)}
 
-renderSessions();renderUsers();renderApps();renderMfa();renderPolicies();paintQr();renderPortal();syncDirectory();renderTenants();if($('reportOutput'))generateReport('success');setRole('Financeiro');updateOtp();for(let i=0;i<8;i++)addLog(users[i%users.length],['Login SSO','Reset de senha','Acesso app','MFA'][i%4],apps[i%apps.length],i===3?'Bloqueado':'Sucesso',i===3?'Senha inválida':'Evento normal');tick();setInterval(tick,4500);setInterval(updateOtp,30000);window.addEventListener('resize',()=>{drawLine();drawDonut()});
+renderSessions();renderUsers();renderApps();renderIntegrationFields();updateIntegrationPreview();renderMfa();renderPolicies();paintQr();renderPortal();syncDirectory();renderTenants();if($('reportOutput'))generateReport('success');setRole('Financeiro');updateOtp();for(let i=0;i<8;i++)addLog(users[i%users.length],['Login SSO','Reset de senha','Acesso app','MFA'][i%4],apps[i%apps.length],i===3?'Bloqueado':'Sucesso',i===3?'Senha inválida':'Evento normal');tick();setInterval(tick,4500);setInterval(updateOtp,30000);window.addEventListener('resize',()=>{drawLine();drawDonut()});
 </script>
 </body></html>
